@@ -26,8 +26,10 @@ export default function Home() {
 
   const currentBlankIndices = blankByPage[currentIndex] ?? new Set<number>();
 
-  const handleCreateBlanks = () => {
-    if (Object.keys(blankByPage).length === 0) {
+  const handleToggleBlanks = () => {
+    const nextChecked = !showBlanks;
+
+    if (nextChecked && Object.keys(blankByPage).length === 0) {
       const nextBlankByPage: BlankByPage = {};
 
       SHURANGAMA_MANTRA_PAGES.forEach((page, index) => {
@@ -37,30 +39,49 @@ export default function Home() {
       setBlankByPage(nextBlankByPage);
     }
 
-    setShowBlanks(true);
-  };
-
-  const handleShowOriginal = () => {
-    setShowBlanks(false);
+    setShowBlanks(nextChecked);
   };
 
   if (!currentPage) return null;
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-start gap-4">
-      <div className="grid w-screen h-screen grid-cols-[120px_1fr_120px]">
+    <div className="flex min-h-screen flex-col items-center justify-start">
+      <div className="grid h-screen w-screen grid-cols-[120px_1fr_120px]">
         <div className="flex items-center justify-center">
-          <button onClick={goPrev} disabled={isFirst}>
+          <button
+            onClick={goPrev}
+            disabled={isFirst}
+            className="rounded border px-4 py-2 disabled:opacity-40"
+          >
             이전
           </button>
         </div>
-        <div className="w-full">
-          <div className="flex gap-3">
-            <button onClick={handleCreateBlanks}>빈칸 만들기</button>
-            <button onClick={handleShowOriginal}>원문 보기</button>
+
+        <div className="flex w-full flex-col items-center pt-6">
+          <div className="mb-4 flex w-full items-center justify-center">
+            <button
+              type="button"
+              onClick={handleToggleBlanks}
+              className="flex items-center gap-3"
+              aria-pressed={showBlanks}
+            >
+              <span className="text-lg font-medium">빈칸</span>
+
+              <span
+                className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors ${
+                  showBlanks ? "bg-gray-800" : "bg-gray-300"
+                }`}
+              >
+                <span
+                  className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${
+                    showBlanks ? "translate-x-8" : "translate-x-1"
+                  }`}
+                />
+              </span>
+            </button>
           </div>
 
-          <div className="flex w-full">
+          <div className="flex w-full overflow-auto px-4">
             {showBlanks ? (
               <MantraTextView
                 mantra={currentPage}
@@ -70,14 +91,14 @@ export default function Home() {
               <MantraTextView mantra={currentPage} />
             )}
           </div>
-
-          <p>
-            {currentIndex + 1} / {total}
-          </p>
         </div>
 
         <div className="flex items-center justify-center">
-          <button onClick={goNext} disabled={isLast}>
+          <button
+            onClick={goNext}
+            disabled={isLast}
+            className="rounded border px-4 py-2 disabled:opacity-40"
+          >
             다음
           </button>
         </div>
