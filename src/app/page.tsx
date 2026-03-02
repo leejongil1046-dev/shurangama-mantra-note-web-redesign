@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import MantraTextView from "../component/mantra-text-view";
+import ToggleSwitch from "../component/toggle-switch";
 import { SHURANGAMA_MANTRA_PAGES } from "../data/shurangama-mantra";
 import { createBlankIndices } from "@/lib/blanks";
 import { usePagination } from "@/hooks/use-pagination";
@@ -26,9 +27,7 @@ export default function Home() {
 
   const currentBlankIndices = blankByPage[currentIndex] ?? new Set<number>();
 
-  const handleToggleBlanks = () => {
-    const nextChecked = !showBlanks;
-
+  const handleToggleBlanks = (nextChecked: boolean) => {
     if (nextChecked && Object.keys(blankByPage).length === 0) {
       const nextBlankByPage: BlankByPage = {};
 
@@ -59,26 +58,11 @@ export default function Home() {
 
         <div className="flex w-full flex-col items-center pt-6">
           <div className="mb-4 flex w-full items-center justify-center">
-            <button
-              type="button"
-              onClick={handleToggleBlanks}
-              className="flex items-center gap-3"
-              aria-pressed={showBlanks}
-            >
-              <span className="text-lg font-medium">빈칸</span>
-
-              <span
-                className={`relative inline-flex h-7 w-14 items-center rounded-full transition-colors ${
-                  showBlanks ? "bg-gray-800" : "bg-gray-300"
-                }`}
-              >
-                <span
-                  className={`inline-block h-5 w-5 transform rounded-full bg-white transition-transform ${
-                    showBlanks ? "translate-x-8" : "translate-x-1"
-                  }`}
-                />
-              </span>
-            </button>
+            <ToggleSwitch
+              label="빈칸"
+              checked={showBlanks}
+              onChange={handleToggleBlanks}
+            />
           </div>
 
           <div className="flex w-full overflow-auto px-4">
