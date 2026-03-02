@@ -53,7 +53,7 @@ export const SHURANGAMA_MANTRA_PAGE_2: Mantra = [
   { line: "아디뭌토카 스마사나바시니 마트르가나 나맣스크르타야", indent: 3 },
   { line: "에뵤 나맣스크르트바 이맘 바가바타", indent: 3 },
   { line: "스타타가토스니삼 시타타파트람 나마파라지타 프라튱기람", indent: 3 },
-  { line: "사르바 데마 나마스크르탐", indent: 0 },
+  { line: "사르바 데바 나마스크르탐", indent: 0 },
   { line: "사르바 데베뱧 푸지탐", indent: 0 },
   { line: "사르바 데베스차 파리파리탐", indent: 0 },
   { line: "사르바 부타그라하 니그라하카림", indent: 0 },
@@ -368,4 +368,19 @@ export const SHURANGAMA_MANTRA_PAGE_12: Mantra = [
   { line: "훔브룸 파트 스바하", indent: 0 },
   { line: "나모스타타가타야 수가타야르하테 사먘삼붇다야", indent: 0 },
   { line: "시댬투 반트라파다 스바하", indent: 0 },
+];
+
+export const SHURANGAMA_MANTRA_PAGES: Mantra[] = [
+  SHURANGAMA_MANTRA_PAGE_1,
+  SHURANGAMA_MANTRA_PAGE_2,
+  SHURANGAMA_MANTRA_PAGE_3,
+  SHURANGAMA_MANTRA_PAGE_4,
+  SHURANGAMA_MANTRA_PAGE_5,
+  SHURANGAMA_MANTRA_PAGE_6,
+  SHURANGAMA_MANTRA_PAGE_7,
+  SHURANGAMA_MANTRA_PAGE_8,
+  SHURANGAMA_MANTRA_PAGE_9,
+  SHURANGAMA_MANTRA_PAGE_10,
+  SHURANGAMA_MANTRA_PAGE_11,
+  SHURANGAMA_MANTRA_PAGE_12,
 ];
