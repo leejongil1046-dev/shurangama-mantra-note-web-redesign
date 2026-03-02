@@ -18,7 +18,7 @@ export default function MantraTextView({
 }: MantraTextViewProps) {
   const lines = getLinesForRender(mantra);
 
-  const renderLine = (lineInfo: RenderLineInfo, lineKey: number) => {
+  const renderLine = (lineInfo: RenderLineInfo, lineIndex: number) => {
     const { line, indent, startIndex } = lineInfo;
     const lineChars = line.split("");
     const paddingLeft = getIndentPx(indent, charBoxWidth);
@@ -41,11 +41,19 @@ export default function MantraTextView({
     });
 
     return (
-      <div key={lineKey} className="flex" style={{ paddingLeft, marginBottom }}>
+      <div
+        key={lineIndex}
+        className="flex"
+        style={{ paddingLeft, marginBottom }}
+      >
         {elements}
       </div>
     );
   };
 
-  return <div>{lines.map(renderLine)}</div>;
+  return (
+    <div>
+      {lines.map((lineInfo, lineIndex) => renderLine(lineInfo, lineIndex))}
+    </div>
+  );
 }
