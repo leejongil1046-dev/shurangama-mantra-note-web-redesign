@@ -36,10 +36,10 @@ export default function MantraTextView({
             style={{
               width: charBoxWidth,
               height: charBoxHeight,
-              border: "1px solid var(--blank-border)",
-              borderRadius: 4,
+              border: "1px solid #999",
+              borderRadius: 5,
               boxSizing: "border-box",
-              backgroundColor: "rgba(196, 184, 168, 0.15)",
+              backgroundColor: "#f8f8f8",
             }}
           />
         );

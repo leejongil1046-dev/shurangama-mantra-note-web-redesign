@@ -3,13 +3,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --mantra-bg: #faf8f5;
-  --mantra-border: #d4c9b8;
-  --accent: #8b7355;
-  --accent-muted: #a89882;
-  --sidebar-bg: #ebe6de;
-  --blank-border: #c4b8a8;
-  --progress-fill: #8b7355;
+  --frame-bg: #3b2a1a;
+  --frame-bg-strong: #442717;
+  --frame-fg: #fdf8f0;
+  --frame-accent: #f0d28a;
 }
 
 @theme inline {

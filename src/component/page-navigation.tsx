@@ -12,10 +12,8 @@ export default function PageNavigation({
   onSelectPage,
 }: PageNavigationProps) {
   return (
-    <aside className="h-full overflow-y-auto border-r border-[var(--mantra-border)] bg-[var(--sidebar-bg)] p-4">
-      <div className="mb-4 text-sm font-semibold text-[var(--foreground)]">
-        페이지
-      </div>
+    <aside className="h-full overflow-y-auto border-r border-gray-200 bg-gray-50 p-4">
+      <div className="mb-4 text-sm font-semibold text-gray-700">페이지</div>
 
       <nav className="flex flex-col gap-2">
         {pages.map((page, index) => {
@@ -25,10 +23,8 @@ export default function PageNavigation({
             <button
               key={page.id}
               onClick={() => onSelectPage(index)}
-              className={`cursor-pointer rounded-lg px-3 py-2 text-left text-sm transition-colors ${
-                isActive
-                  ? "bg-[var(--accent)] font-semibold text-white"
-                  : "text-[var(--foreground)] hover:bg-[var(--mantra-border)]/50"
+              className={`cursor-pointer rounded px-3 py-2 text-left text-sm ${
+                isActive ? "bg-gray-200 font-semibold" : "hover:bg-gray-100"
               }`}
             >
               {page.pageNumber}페이지
