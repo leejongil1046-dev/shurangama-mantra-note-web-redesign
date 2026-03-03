@@ -6,15 +6,16 @@ type StudyLayoutProps = {
 
 export default function StudyLayout({ children }: StudyLayoutProps) {
   return (
-    <div className="min-h-screen bg-white text-black">
-      <header className="h-16 border-b border-gray-200 px-4">
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
+      <header className="flex h-16 items-center border-b border-[var(--mantra-border)] bg-[var(--mantra-bg)] px-6">
         <div className="flex h-full items-center justify-between">
-          <div className="text-xl font-semibold">대불정수능엄신주 외우기</div>
-          {/* <div className="text-sm text-gray-500">study mode</div> */}
+          <div className="text-xl font-semibold text-[var(--foreground)]">
+            대불정수능엄신주 외우기
+          </div>
         </div>
       </header>
 
-      <main className="min-h-[calc(100vh-56px)]">{children}</main>
+      <main className="min-h-[calc(100vh-64px)]">{children}</main>
     </div>
   );
 }

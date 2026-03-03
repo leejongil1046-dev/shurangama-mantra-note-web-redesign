@@ -46,7 +46,7 @@ export default function PracticePage() {
   if (!currentPage) return null;
 
   return (
-    <div className="grid h-[calc(100vh-56px)] grid-cols-[220px_1fr] gap-6 overflow-hidden">
+    <div className="grid h-[calc(100vh-64px)] grid-cols-[220px_1fr] overflow-hidden">
       <PageNavigation
         pages={SHURANGAMA_MANTRA_PAGES}
         currentIndex={currentIndex}
@@ -61,35 +61,39 @@ export default function PracticePage() {
             onChange={handleToggleBlanks}
           />
 
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-[var(--accent-muted)]">
             {currentPage.pageNumber} / {total}
           </p>
         </div>
 
-        <div className="min-h-0 flex-1 overflow-auto rounded border border-gray-200 p-4">
-          {showBlanks ? (
-            <MantraTextView
-              mantra={currentPage.mantra}
-              blankIndices={currentBlankIndices}
-            />
-          ) : (
-            <MantraTextView mantra={currentPage.mantra} />
-          )}
+        <div className="min-h-0 flex-1 overflow-auto rounded-xl border border-[var(--mantra-border)] bg-[var(--mantra-bg)] p-6 shadow-sm">
+          <div className="min-w-[800px] ">
+            {showBlanks ? (
+              <MantraTextView
+                mantra={currentPage.mantra}
+                blankIndices={currentBlankIndices}
+              />
+            ) : (
+              <MantraTextView mantra={currentPage.mantra} />
+            )}
+          </div>
         </div>
 
         <div className="flex items-center justify-between pt-4">
           <button
+            type="button"
             onClick={goPrev}
             disabled={isFirst}
-            className="rounded border px-4 py-2 disabled:opacity-40"
+            className="rounded-xl border border-[var(--mantra-border)] bg-[var(--mantra-bg)] px-5 py-2.5 text-[var(--foreground)] transition-colors hover:bg-[var(--mantra-border)]/30 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
           >
             이전
           </button>
 
           <button
+            type="button"
             onClick={goNext}
             disabled={isLast}
-            className="rounded border px-4 py-2 disabled:opacity-40"
+            className="rounded-xl border border-[var(--mantra-border)] bg-[var(--mantra-bg)] px-5 py-2.5 text-[var(--foreground)] transition-colors hover:bg-[var(--mantra-border)]/30 disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
           >
             다음
           </button>

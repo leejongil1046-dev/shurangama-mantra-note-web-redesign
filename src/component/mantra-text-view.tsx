@@ -36,9 +36,10 @@ export default function MantraTextView({
             style={{
               width: charBoxWidth,
               height: charBoxHeight,
-              border: "1px solid #555",
-              borderRadius: 2,
+              border: "1px solid var(--blank-border)",
+              borderRadius: 4,
               boxSizing: "border-box",
+              backgroundColor: "rgba(196, 184, 168, 0.15)",
             }}
           />
         );
@@ -47,7 +48,7 @@ export default function MantraTextView({
       return (
         <div
           key={globalIndex}
-          className="flex items-center justify-center"
+          className="flex items-center justify-center font-mantra"
           style={{
             width: charBoxWidth,
             height: charBoxHeight,
@@ -70,7 +71,7 @@ export default function MantraTextView({
   };
 
   return (
-    <div>
+    <div className="font-mantra leading-relaxed">
       {lines.map((lineInfo, lineIndex) => renderLine(lineInfo, lineIndex))}
     </div>
   );

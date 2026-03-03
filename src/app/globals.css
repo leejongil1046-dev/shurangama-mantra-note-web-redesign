@@ -3,6 +3,13 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --mantra-bg: #faf8f5;
+  --mantra-border: #d4c9b8;
+  --accent: #8b7355;
+  --accent-muted: #a89882;
+  --sidebar-bg: #ebe6de;
+  --blank-border: #c4b8a8;
+  --progress-fill: #8b7355;
 }
 
 @theme inline {
@@ -10,6 +17,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-noto-serif-kr);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,4 +31,8 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.font-mantra {
+  font-family: var(--font-noto-serif-kr), "Noto Serif KR", serif;
 }
