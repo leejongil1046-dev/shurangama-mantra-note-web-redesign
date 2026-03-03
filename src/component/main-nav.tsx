@@ -4,10 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV_ITEMS = [
-  { href: "/", label: "홈", key: "home" },
+  { href: "/", label: "시작하기", key: "home" },
   { href: "/practice", label: "연습하기", key: "practice" },
   { href: "/memorize", label: "암기하기", key: "memorize" },
-  { href: "/setting", label: "설정", key: "setting" },
 ] as const;
 
 export default function MainNav() {
@@ -17,7 +16,6 @@ export default function MainNav() {
     if (pathname === "/") return "home";
     if (pathname.startsWith("/practice")) return "practice";
     if (pathname.startsWith("/memorize")) return "memorize";
-    if (pathname.startsWith("/setting")) return "setting";
     return undefined;
   };
 

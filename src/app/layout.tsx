@@ -36,7 +36,7 @@ export default function RootLayout({
       >
         <div className="flex min-h-screen flex-col min-w-[1000px]">
           <header className="flex h-35 items-center border-b border-gray-200 px-6">
-            <div className="mx-auto flex h-full items-center justify-center">
+            <div className="mx-auto flex h-full items-center justify-cente">
               <div className="font-mantra text-[40px] font-bold">
                 대불정수능엄신주
               </div>
@@ -50,7 +50,7 @@ export default function RootLayout({
           </main>
 
           <footer className="border-t border-gray-200 px-6 py-3 text-xs">
-            <div className="mx-auto flex items-center justify-center gap-4">
+            <div className="mx-auto flex items-center justify-center gap-4 h-5">
               <span>© {new Date().getFullYear()} 능엄주 암기 노트</span>
             </div>
           </footer>

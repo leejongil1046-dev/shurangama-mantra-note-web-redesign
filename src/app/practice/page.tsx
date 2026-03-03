@@ -7,6 +7,8 @@ import { SHURANGAMA_MANTRA_PAGES } from "@/data/shurangama-mantra";
 import { createBlankIndices } from "@/lib/blanks";
 import { usePagination } from "@/hooks/use-pagination";
 import { useSettingStore } from "@/store/setting-store";
+import Image from "next/image";
+import SettingModal from "@/component/setting-modal";
 
 type BlankByPage = Record<number, Set<number>>;
 
@@ -17,7 +19,7 @@ const difficultyToRatio = {
 } as const;
 
 export default function PracticePage() {
-  const { pageStart, pageEnd, difficulty } = useSettingStore();
+  const { pageStart, pageEnd, difficulty, hasHydrated } = useSettingStore();
   const ratio = difficultyToRatio[difficulty];
 
   const selectedPages = useMemo(
@@ -27,6 +29,7 @@ export default function PracticePage() {
 
   const [showBlanks, setShowBlanks] = useState(false);
   const [blankByPage, setBlankByPage] = useState<BlankByPage>({});
+  const [isSettingOpen, setIsSettingOpen] = useState(false);
 
   const {
     currentIndex,
@@ -60,34 +63,78 @@ export default function PracticePage() {
 
   return (
     <div className="mx-auto h-full w-[1000px]">
-      <section className="flex h-full min-w-0 flex-col overflow-hidden pb-5">
+      <section className="flex w-full h-full min-w-0 flex-col overflow-hidden pb-5">
         <div className="flex items-center justify-between p-4">
-          <ToggleSwitch
-            label="빈칸"
-            checked={showBlanks}
-            onChange={handleToggleBlanks}
-          />
+          <div className="flex flex-row justify-start gap-5 w-[150px]">
+            <ToggleSwitch
+              label="빈칸"
+              checked={showBlanks}
+              onChange={handleToggleBlanks}
+            />
+          </div>
 
-          <div className="flex w-[200px] items-center justify-between">
+          <div className="flex w-[150px] items-center justify-between">
             <button
               type="button"
               onClick={goPrev}
               disabled={isFirst}
-              className="cursor-pointer rounded border px-3 py-1 disabled:opacity-40"
+              className="flex h-8 w-8 items-center justify-center rounded border disabled:opacity-40"
+              aria-label="이전 페이지"
             >
-              이전
+              <Image
+                src="/icons/left.svg"
+                alt=""
+                width={16}
+                height={16}
+                className="h-4 w-4"
+              />
             </button>
+
             <p className="text-md text-gray-600">
-              {currentPage.pageNumber} / {total}
+              {hasHydrated ? `${currentPage.pageNumber} / 12` : ""}
             </p>
+
             <button
               type="button"
               onClick={goNext}
               disabled={isLast}
-              className="cursor-pointer rounded border px-3 py-1 disabled:opacity-40"
+              className="flex h-8 w-8 items-center justify-center rounded border disabled:opacity-40"
+              aria-label="다음 페이지"
             >
-              다음
+              <Image
+                src="/icons/right.svg"
+                alt=""
+                width={16}
+                height={16}
+                className="h-4 w-4"
+              />
             </button>
+          </div>
+
+          <div className="flex w-[150px] items-center justify-end gap-3">
+            <button
+              type="button"
+              onClick={() => setIsSettingOpen(true)}
+              className="flex h-[35px] w-[35px] items-center justify-center rounded cursor-pointer hover:bg-gray-100"
+              aria-label="설정"
+            >
+              <Image
+                src="/icons/setting.svg"
+                alt="설정"
+                width={30}
+                height={30}
+              />
+            </button>
+
+            {isSettingOpen && (
+              <SettingModal
+                open
+                pageStart={pageStart}
+                pageEnd={pageEnd}
+                difficulty={difficulty}
+                onClose={() => setIsSettingOpen(false)}
+              />
+            )}
           </div>
         </div>
 
@@ -95,16 +142,21 @@ export default function PracticePage() {
           className="min-h-0 flex-1 overflow-auto rounded border border-gray-200 p-4"
           style={{ backgroundAttachment: "local" }}
         >
-          <div className="min-w-[800px] ">
-            {showBlanks ? (
-              <MantraTextView
-                mantra={currentPage.mantra}
-                blankIndices={currentBlankIndices}
-              />
-            ) : (
-              <MantraTextView mantra={currentPage.mantra} />
-            )}
-          </div>
+          {hasHydrated ? (
+            <div className="min-w-[800px]">
+              {showBlanks ? (
+                <MantraTextView
+                  mantra={currentPage.mantra}
+                  blankIndices={currentBlankIndices}
+                />
+              ) : (
+                <MantraTextView mantra={currentPage.mantra} />
+              )}
+            </div>
+          ) : (
+            // hydration 전에는 대략적인 높이만 가진 빈 박스를 렌더
+            <div className="min-w-[800px] h-[600px]" />
+          )}
         </div>
       </section>
     </div>
