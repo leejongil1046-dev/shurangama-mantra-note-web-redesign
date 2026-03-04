@@ -1,5 +1,12 @@
 import { getFullText } from "@/lib/mantra-format";
 import type { Mantra } from "@/types/mantra";
+import type { Difficulty } from "@/store/setting-store";
+
+export const difficultyToRatio: Record<Difficulty, number> = {
+  easy: 0.1,
+  medium: 0.2,
+  hard: 0.3,
+} as const;
 
 export function createBlankIndices(mantra: Mantra, ratio: number): Set<number> {
   const fullText = getFullText(mantra);

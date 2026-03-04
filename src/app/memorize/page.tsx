@@ -3,19 +3,13 @@
 import { useEffect, useMemo } from "react";
 import MantraTextView from "@/component/mantra-text-view";
 import { SHURANGAMA_MANTRA_PAGES } from "@/data/shurangama-mantra";
-import { createBlankIndices } from "@/lib/blanks";
+import { createBlankIndices, difficultyToRatio } from "@/lib/blanks";
 import { usePagination } from "@/hooks/use-pagination";
 import { useSettingStore } from "@/store/setting-store";
 import { useMemorizeStore } from "@/store/memorize-store";
 import TopSettingButton from "@/component/top-setting-button";
 import PaginationControls from "@/component/pagination-controls";
 import PageRangeLegend from "@/component/page-range-legend";
-
-const difficultyToRatio = {
-  easy: 0.1,
-  medium: 0.3,
-  hard: 0.5,
-} as const;
 
 export default function MemorizePage() {
   const { memorize, hasHydrated } = useSettingStore();

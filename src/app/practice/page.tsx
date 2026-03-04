@@ -7,17 +7,11 @@ import PaginationControls from "@/component/pagination-controls";
 import TopSettingButton from "@/component/top-setting-button";
 import PageRangeLegend from "@/component/page-range-legend";
 import { SHURANGAMA_MANTRA_PAGES } from "@/data/shurangama-mantra";
-import { createBlankIndices } from "@/lib/blanks";
+import { createBlankIndices, difficultyToRatio } from "@/lib/blanks";
 import { usePagination } from "@/hooks/use-pagination";
 import { useSettingStore } from "@/store/setting-store";
 
 type BlankByPage = Record<number, Set<number>>;
-
-const difficultyToRatio = {
-  easy: 0.1,
-  medium: 0.3,
-  hard: 0.5,
-} as const;
 
 export default function PracticePage() {
   const { practice, hasHydrated } = useSettingStore();
