@@ -4,6 +4,9 @@ import type { Mantra, RenderLineInfo } from "@/types/mantra";
 export type MantraTextViewProps = {
   mantra: Mantra;
   blankIndices?: Set<number>;
+  mode?: "practice" | "memorize";
+  answers?: Record<number, string>;
+  onChangeAnswer?: (index: number, value: string) => void;
   charBoxWidth?: number;
   charBoxHeight?: number;
   fontSize?: number;
@@ -13,6 +16,9 @@ export type MantraTextViewProps = {
 export default function MantraTextView({
   mantra,
   blankIndices = new Set<number>(),
+  mode = "practice",
+  answers,
+  onChangeAnswer,
   charBoxWidth = 24,
   charBoxHeight = 26,
   fontSize = 20,
@@ -24,11 +30,34 @@ export default function MantraTextView({
     const { line, indent, startIndex } = lineInfo;
     const lineChars = line.split("");
     const paddingLeft = getIndentPx(indent, charBoxWidth);
+    const isMemorize = mode === "memorize";
 
     const elements = lineChars.map((char, i) => {
       const globalIndex = startIndex + i;
 
       if (blankIndices.has(globalIndex)) {
+        if (isMemorize && onChangeAnswer) {
+          const value = answers?.[globalIndex] ?? "";
+
+          return (
+            <input
+              key={globalIndex}
+              value={value}
+              onChange={(e) => onChangeAnswer(globalIndex, e.target.value)}
+              className="flex items-center justify-center text-center font-mantra"
+              style={{
+                width: charBoxWidth,
+                height: charBoxHeight,
+                border: "1px solid #999",
+                borderRadius: 5,
+                boxSizing: "border-box",
+                backgroundColor: "#f8f8f8",
+                fontSize,
+              }}
+            />
+          );
+        }
+
         return (
           <div
             key={globalIndex}

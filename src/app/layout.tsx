@@ -37,7 +37,7 @@ export default function RootLayout({
         <div className="flex min-h-screen flex-col min-w-[1000px]">
           <header className="flex h-35 items-center border-b border-gray-200 px-6">
             <div className="mx-auto flex h-full items-center justify-cente">
-              <div className="font-mantra text-[40px] font-bold">
+              <div className="font-mantra text-[45px] font-bold">
                 대불정수능엄신주
               </div>
             </div>

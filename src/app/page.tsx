@@ -13,7 +13,7 @@ export default function HomePage() {
           능엄주를 천천히, 끝까지
         </h1>
 
-        <p className="max-w-[560px] text-base leading-relaxed text-gray-600">
+        <p className="max-w-[570px] text-base leading-relaxed text-gray-600">
           능엄주는 동아시아 불교에서 오랫동안 독송되어 온 긴 다라니입니다. 한 번
           입에 익으면 평생을 함께하지만, 분량이 길고 흐름이 복잡해 처음부터
           끝까지 혼자 외우기란 쉽지 않습니다.

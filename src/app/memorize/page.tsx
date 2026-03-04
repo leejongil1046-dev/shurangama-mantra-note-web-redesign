@@ -18,7 +18,7 @@ const difficultyToRatio = {
   hard: 0.5,
 } as const;
 
-export default function PracticePage() {
+export default function MemorizePage() {
   const { pageStart, pageEnd, difficulty, hasHydrated } = useSettingStore();
   const ratio = difficultyToRatio[difficulty];
 
@@ -26,10 +26,6 @@ export default function PracticePage() {
     () => SHURANGAMA_MANTRA_PAGES.slice(pageStart - 1, pageEnd),
     [pageStart, pageEnd],
   );
-
-  const [showBlanks, setShowBlanks] = useState(false);
-  const [blankByPage, setBlankByPage] = useState<BlankByPage>({});
-  const [isSettingOpen, setIsSettingOpen] = useState(false);
 
   const {
     currentIndex,
@@ -41,6 +37,22 @@ export default function PracticePage() {
   } = usePagination({
     items: selectedPages,
   });
+
+  const [showBlanks, setShowBlanks] = useState(false);
+  const [blankByPage, setBlankByPage] = useState<BlankByPage>({});
+  const [isSettingOpen, setIsSettingOpen] = useState(false);
+  const [answersByPage, setAnswersByPage] = useState<
+    Record<number, Record<number, string>>
+  >({});
+
+  const currentAnswers = answersByPage[currentIndex] ?? {};
+
+  const handleChangeAnswer = (index: number, value: string) => {
+    setAnswersByPage((prev) => ({
+      ...prev,
+      [currentIndex]: { ...(prev[currentIndex] ?? {}), [index]: value },
+    }));
+  };
 
   const currentBlankIndices = blankByPage[currentIndex] ?? new Set<number>();
 
@@ -147,6 +159,9 @@ export default function PracticePage() {
                 <MantraTextView
                   mantra={currentPage.mantra}
                   blankIndices={currentBlankIndices}
+                  mode="memorize"
+                  answers={currentAnswers}
+                  onChangeAnswer={handleChangeAnswer}
                 />
               ) : (
                 <MantraTextView mantra={currentPage.mantra} />
