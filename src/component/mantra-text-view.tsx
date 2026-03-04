@@ -43,8 +43,9 @@ export default function MantraTextView({
             <input
               key={globalIndex}
               value={value}
+              maxLength={1}
               onChange={(e) => onChangeAnswer(globalIndex, e.target.value)}
-              className="flex items-center justify-center text-center font-mantra"
+              className="flex items-center justify-center text-center font-mantra font-semibold"
               style={{
                 width: charBoxWidth,
                 height: charBoxHeight,

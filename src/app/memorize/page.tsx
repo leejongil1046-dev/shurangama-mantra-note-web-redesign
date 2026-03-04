@@ -72,6 +72,8 @@ export default function MemorizePage() {
 
   if (!currentPage) return null;
 
+  console.log(currentAnswers);
+
   return (
     <div className="mx-auto h-full w-[1000px]">
       <section className="flex w-full h-full min-w-0 flex-col overflow-hidden pr-5 pl-5 pb-5">
