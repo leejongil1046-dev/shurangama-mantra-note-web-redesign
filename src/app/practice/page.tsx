@@ -33,6 +33,7 @@ export default function PracticePage() {
     isLast,
     goPrev,
     goNext,
+    setCurrentIndex,
   } = usePagination({
     items: selectedPages,
   });
@@ -51,6 +52,13 @@ export default function PracticePage() {
     }
 
     setShowBlanks(nextChecked);
+  };
+
+  const handleResetPractice = () => {
+    // 빈칸 정보와 표시 상태를 초기화하고, 현재 설정된 페이지 범위의 첫 페이지로 이동
+    setBlankByPage({});
+    setShowBlanks(false);
+    setCurrentIndex(0);
   };
 
   if (!currentPage) return null;
@@ -75,7 +83,7 @@ export default function PracticePage() {
             onNext={goNext}
           />
 
-          <TopSettingButton mode="practice" />
+          <TopSettingButton mode="practice" onReset={handleResetPractice} />
         </div>
 
         <div className="relative min-h-0 flex-1 overflow-auto rounded border border-gray-200 p-4">

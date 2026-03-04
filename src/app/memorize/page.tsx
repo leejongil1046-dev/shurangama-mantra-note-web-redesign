@@ -43,6 +43,7 @@ export default function MemorizePage() {
     isLast,
     goPrev,
     goNext,
+    setCurrentIndex,
   } = usePagination({
     items: selectedPages,
     initialIndex,
@@ -75,6 +76,12 @@ export default function MemorizePage() {
     resetSession();
   };
 
+  const handleResetMemorize = () => {
+    // 암기 세션 전체를 초기화하고, 현재 설정된 페이지 범위의 첫 페이지로 이동
+    resetSession();
+    setCurrentIndex(0);
+  };
+
   useEffect(() => {
     if (isActive) {
       setLastPageIndex(currentIndex);
@@ -93,7 +100,7 @@ export default function MemorizePage() {
                 <button
                   type="button"
                   onClick={handleStartMemorize}
-                  className="rounded border px-3 py-1 text-sm hover:bg-gray-100"
+                  className="rounded border w-[80px] py-1 text-sm cursor-pointer hover:bg-gray-100"
                 >
                   암기 시작
                 </button>
@@ -101,16 +108,9 @@ export default function MemorizePage() {
                 <>
                   <button
                     type="button"
-                    className="rounded border px-3 py-1 text-sm hover:bg-gray-100"
+                    className="rounded border w-[80px] py-1 text-sm cursor-pointer hover:bg-gray-100"
                   >
                     채점하기
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleFinishMemorize}
-                    className="rounded border px-3 py-1 text-sm hover:bg-gray-100"
-                  >
-                    종료하기
                   </button>
                 </>
               ))}
@@ -124,7 +124,7 @@ export default function MemorizePage() {
             onNext={goNext}
           />
 
-          <TopSettingButton mode="memorize" />
+          <TopSettingButton mode="memorize" onReset={handleResetMemorize} />
         </div>
 
         <div className="relative min-h-0 flex-1 overflow-auto rounded border border-gray-200 p-4">
