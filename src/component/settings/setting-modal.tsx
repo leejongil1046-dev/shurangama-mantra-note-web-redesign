@@ -1,7 +1,7 @@
 "use client";
 
-import PageRangeSetting from "@/component/page-range-setting";
-import DifficultySetting from "@/component/difficulty-setting";
+import PageRangeSetting from "@/component/settings/page-range-setting";
+import DifficultySetting from "@/component/settings/difficulty-setting";
 import { useSettingStore, type Difficulty } from "@/store/setting-store";
 import { useMemorizeStore } from "@/store/memorize-store";
 import { useMemo, useState } from "react";
