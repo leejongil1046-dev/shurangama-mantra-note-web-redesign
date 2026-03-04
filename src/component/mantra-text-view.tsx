@@ -71,7 +71,14 @@ export default function MantraTextView({
               boxSizing: "border-box",
               backgroundColor: "#f8f8f8",
             }}
-          />
+          >
+            <span
+              className="font-mantra text-[#f8f8f8] hover:text-gray-400 hover:cursor-none"
+              style={{ fontSize }}
+            >
+              {char}
+            </span>
+          </div>
         );
       }
 
