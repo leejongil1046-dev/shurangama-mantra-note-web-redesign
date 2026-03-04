@@ -1,14 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import MantraTextView from "@/component/mantra-text-view";
 import { SHURANGAMA_MANTRA_PAGES } from "@/data/shurangama-mantra";
 import { createBlankIndices } from "@/lib/blanks";
 import { usePagination } from "@/hooks/use-pagination";
 import { useSettingStore } from "@/store/setting-store";
 import { useMemorizeStore } from "@/store/memorize-store";
-import Image from "next/image";
-import SettingModal from "@/component/setting-modal";
 import TopSettingButton from "@/component/top-setting-button";
 import PaginationControls from "@/component/pagination-controls";
 
@@ -19,7 +17,8 @@ const difficultyToRatio = {
 } as const;
 
 export default function MemorizePage() {
-  const { pageStart, pageEnd, difficulty, hasHydrated } = useSettingStore();
+  const { memorize, hasHydrated } = useSettingStore();
+  const { pageStart, pageEnd, difficulty } = memorize;
   const ratio = difficultyToRatio[difficulty];
 
   const selectedPages = useMemo(
@@ -53,8 +52,6 @@ export default function MemorizePage() {
     items: selectedPages,
     initialIndex,
   });
-
-  const [isSettingOpen, setIsSettingOpen] = useState(false);
 
   const currentAnswers = answersByPage[currentIndex] ?? {};
 
@@ -90,8 +87,6 @@ export default function MemorizePage() {
   }, [currentIndex, isActive, setLastPageIndex]);
 
   if (!currentPage) return null;
-
-  console.log(currentAnswers);
 
   return (
     <div className="mx-auto h-full w-[1000px]">
@@ -134,11 +129,7 @@ export default function MemorizePage() {
             onNext={goNext}
           />
 
-          <TopSettingButton
-            pageStart={pageStart}
-            pageEnd={pageEnd}
-            difficulty={difficulty}
-          />
+          <TopSettingButton mode="memorize" />
         </div>
 
         <div

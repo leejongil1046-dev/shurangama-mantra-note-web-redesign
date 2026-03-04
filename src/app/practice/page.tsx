@@ -19,7 +19,8 @@ const difficultyToRatio = {
 } as const;
 
 export default function PracticePage() {
-  const { pageStart, pageEnd, difficulty, hasHydrated } = useSettingStore();
+  const { practice, hasHydrated } = useSettingStore();
+  const { pageStart, pageEnd, difficulty } = practice;
   const ratio = difficultyToRatio[difficulty];
 
   const selectedPages = useMemo(
@@ -66,7 +67,7 @@ export default function PracticePage() {
     <div className="mx-auto h-full w-[1000px]">
       <section className="flex w-full h-full min-w-0 flex-col overflow-hidden pr-5 pl-5 pb-5">
         <div className="flex items-center justify-between p-4">
-          <div className="flex flex-row justify-start gap-5 w-[150px]">
+          <div className="flex flex-row justify-start gap-5 w-[200px]">
             <ToggleSwitch
               label="빈칸"
               checked={showBlanks}
@@ -82,11 +83,7 @@ export default function PracticePage() {
             onNext={goNext}
           />
 
-          <TopSettingButton
-            pageStart={pageStart}
-            pageEnd={pageEnd}
-            difficulty={difficulty}
-          />
+          <TopSettingButton mode="practice" />
         </div>
 
         <div

@@ -1,23 +1,16 @@
 import { useState } from "react";
 import Image from "next/image";
-import SettingModal from "@/component/setting-modal";
-import type { Difficulty } from "@/store/setting-store";
+import SettingModal, { type SettingMode } from "@/component/setting-modal";
 
 type TopSettingButtonProps = {
-  pageStart: number;
-  pageEnd: number;
-  difficulty: Difficulty;
+  mode: SettingMode;
 };
 
-export default function TopSettingButton({
-  pageStart,
-  pageEnd,
-  difficulty,
-}: TopSettingButtonProps) {
+export default function TopSettingButton({ mode }: TopSettingButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="flex w-[150px] items-center justify-end gap-3">
+    <div className="flex w-[200px] items-center justify-end gap-3">
       <button
         type="button"
         onClick={() => setIsOpen(true)}
@@ -28,15 +21,8 @@ export default function TopSettingButton({
       </button>
 
       {isOpen && (
-        <SettingModal
-          open
-          pageStart={pageStart}
-          pageEnd={pageEnd}
-          difficulty={difficulty}
-          onClose={() => setIsOpen(false)}
-        />
+        <SettingModal open mode={mode} onClose={() => setIsOpen(false)} />
       )}
     </div>
   );
 }
-

@@ -5,22 +5,28 @@ import DifficultySetting from "@/component/difficulty-setting";
 import { useSettingStore, type Difficulty } from "@/store/setting-store";
 import { useMemo, useState } from "react";
 
+export type SettingMode = "practice" | "memorize";
+
 type SettingModalProps = {
   open: boolean;
   onClose?: () => void;
-  pageStart: number;
-  pageEnd: number;
-  difficulty: Difficulty;
+  mode: SettingMode;
 };
 
 export default function SettingModal({
   open,
   onClose,
-  pageStart,
-  pageEnd,
-  difficulty,
+  mode,
 }: SettingModalProps) {
-  const { setPageRange, setDifficulty } = useSettingStore();
+  const practice = useSettingStore((s) => s.practice);
+  const memorize = useSettingStore((s) => s.memorize);
+  const slice = mode === "practice" ? practice : memorize;
+  const { pageStart, pageEnd, difficulty } = slice;
+
+  const setPracticePageRange = useSettingStore((s) => s.setPracticePageRange);
+  const setPracticeDifficulty = useSettingStore((s) => s.setPracticeDifficulty);
+  const setMemorizePageRange = useSettingStore((s) => s.setMemorizePageRange);
+  const setMemorizeDifficulty = useSettingStore((s) => s.setMemorizeDifficulty);
 
   const [tempRange, setTempRange] = useState<[number, number]>([
     pageStart,
@@ -41,8 +47,13 @@ export default function SettingModal({
 
   const handleSave = () => {
     const [start, end] = tempRange;
-    setPageRange(start, end);
-    setDifficulty(tempDifficulty);
+    if (mode === "practice") {
+      setPracticePageRange(start, end);
+      setPracticeDifficulty(tempDifficulty);
+    } else {
+      setMemorizePageRange(start, end);
+      setMemorizeDifficulty(tempDifficulty);
+    }
     window.location.reload();
   };
 
@@ -50,7 +61,9 @@ export default function SettingModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="mx-4 w-full max-w-[1000px] rounded-md bg-white px-6 py-8 shadow-lg">
         <div className="mb-6 flex items-center justify-between p-5">
-          <h1 className="text-3xl font-semibold">설정</h1>
+          <h1 className="text-3xl font-semibold">
+            설정 {mode === "practice" ? "(연습하기)" : "(암기하기)"}
+          </h1>
           {onClose && (
             <button
               type="button"
