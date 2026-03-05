@@ -23,11 +23,11 @@ export default function PageRangeLegend({
       aria-label="선택 범위 및 난이도"
     >
       <span>
-        <span className="font-medium text-gray-500">페이지</span> {pageStart}–
+        <span className="font-medium text-gray-500">페이지: </span> {pageStart}~
         {pageEnd}
       </span>
       <span>
-        <span className="font-medium text-gray-500">난이도</span>{" "}
+        <span className="font-medium text-gray-500">난이도: </span>{" "}
         {difficultyLabel[difficulty]}
       </span>
     </div>

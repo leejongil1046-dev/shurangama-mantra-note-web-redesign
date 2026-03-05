@@ -10,6 +10,7 @@ import { useMemorizeStore } from "@/store/memorize-store";
 import TopSettingButton from "@/component/layout/top-setting-button";
 import PaginationControls from "@/component/layout/pagination-controls";
 import PageRangeLegend from "@/component/settings/page-range-legend";
+import MemorizeActions from "@/component/memorize/memorize-actions";
 
 export default function MemorizePage() {
   const { memorize, hasHydrated } = useSettingStore();
@@ -77,7 +78,6 @@ export default function MemorizePage() {
   };
 
   const handleResetMemorize = () => {
-    // 암기 세션 전체를 초기화하고, 현재 설정된 페이지 범위의 첫 페이지로 이동
     resetSession();
     setCurrentIndex(0);
   };
@@ -94,27 +94,12 @@ export default function MemorizePage() {
     <div className="mx-auto h-full w-[1000px]">
       <section className="flex w-full h-full min-w-0 flex-col overflow-hidden pr-5 pl-5 pb-5">
         <div className="flex items-center justify-between p-4">
-          <div className="flex flex-row justify-start gap-3 w-[200px]">
-            {hasHydrated &&
-              (!isActive ? (
-                <button
-                  type="button"
-                  onClick={handleStartMemorize}
-                  className="rounded border w-[80px] py-1 text-sm cursor-pointer hover:bg-gray-100"
-                >
-                  암기 시작
-                </button>
-              ) : (
-                <>
-                  <button
-                    type="button"
-                    className="rounded border w-[80px] py-1 text-sm cursor-pointer hover:bg-gray-100"
-                  >
-                    채점하기
-                  </button>
-                </>
-              ))}
-          </div>
+          <MemorizeActions
+            hasHydrated={hasHydrated}
+            isActive={isActive}
+            onStart={handleStartMemorize}
+            onFinish={handleFinishMemorize}
+          />
 
           <PaginationControls
             isFirst={isFirst}
