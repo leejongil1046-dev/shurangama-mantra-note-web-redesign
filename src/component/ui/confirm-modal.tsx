@@ -31,7 +31,7 @@ const PRESET = {
   "grade-with-blanks": {
     title: "채점하시겠습니까?",
     description:
-      "총 {totalBlanks}개의 빈칸 중 {filledCount}개를 입력하셨습니다. 아직 입력하지 않은 빈칸이 남아있는데 채점하시겠습니까?",
+      "총 {totalBlanks}개의 빈칸 중 {filledCount}개를 입력하셨습니다. 정말 채점하시겠습니까?",
     confirmLabel: "채점하기",
     cancelLabel: "취소",
   },
