@@ -53,9 +53,26 @@ export default function HomePage() {
           <h2 className="text-lg font-semibold">이 사이트에서 할 수 있는 것</h2>
           <ul className="list-disc space-y-1 pl-5">
             <li>능엄주를 페이지별로 나누어 필요한 구간만 집중해서 읽기</li>
-            <li>난이도에 따라 자동으로 빈칸을 만들어 암기 상태 점검하기</li>
             <li>앞뒤 페이지를 오가며 전체 흐름 속에서 반복 연습하기</li>
-            <li>추후에는 직접 입력과 채점을 통한 암기 기록 기능도 추가 예정</li>
+            <li>
+              <strong>연습하기</strong>
+              <ul className="list-disc space-y-0.5 pl-5 mt-1">
+                <li>
+                  난이도에 따라 빈칸을 만들고, 마우스로 올리면 정답을 보며
+                  반복해서 익히기
+                </li>
+              </ul>
+            </li>
+            <li>
+              <strong>암기하기</strong>
+              <ul className="list-disc space-y-0.5 pl-5 mt-1">
+                <li>같은 난이도로 빈칸을 만들고 직접 입력한 뒤 채점하기</li>
+                <li>
+                  페이지별·전체 정답률 확인, 맞은 글자는 파란색·틀린 글자는
+                  빨간색으로 다시 보기
+                </li>
+              </ul>
+            </li>
           </ul>
         </div>
 
