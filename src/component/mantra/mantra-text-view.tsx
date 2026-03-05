@@ -1,12 +1,18 @@
 import { getIndentPx, getLinesForRender } from "@/lib/mantra-format";
 import type { Mantra, RenderLineInfo } from "@/types/mantra";
 
+export type GradeDisplayEntry = {
+  correctChar: string;
+  isCorrect: boolean;
+};
+
 export type MantraTextViewProps = {
   mantra: Mantra;
   blankIndices?: Set<number>;
   mode?: "practice" | "memorize";
   answers?: Record<number, string>;
   onChangeAnswer?: (index: number, value: string) => void;
+  gradeDisplay?: Record<number, GradeDisplayEntry>;
   charBoxWidth?: number;
   charBoxHeight?: number;
   fontSize?: number;
@@ -19,6 +25,7 @@ export default function MantraTextView({
   mode = "practice",
   answers,
   onChangeAnswer,
+  gradeDisplay,
   charBoxWidth = 24,
   charBoxHeight = 26,
   fontSize = 20,
@@ -36,6 +43,28 @@ export default function MantraTextView({
       const globalIndex = startIndex + i;
 
       if (blankIndices.has(globalIndex)) {
+        if (gradeDisplay?.[globalIndex]) {
+          const graded = gradeDisplay[globalIndex];
+          return (
+            <div
+              key={globalIndex}
+              className="flex items-center justify-center text-center font-mantra font-semibold"
+              style={{
+                width: charBoxWidth,
+                height: charBoxHeight,
+                border: "1px solid #999",
+                borderRadius: 5,
+                boxSizing: "border-box",
+                backgroundColor: "#f8f8f8",
+                fontSize,
+                color: graded.isCorrect ? "#2563eb" : "#dc2626",
+              }}
+            >
+              {graded.correctChar}
+            </div>
+          );
+        }
+
         if (isMemorize && onChangeAnswer) {
           const value = answers?.[globalIndex] ?? "";
 

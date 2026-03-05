@@ -10,7 +10,6 @@ type ConfirmModalProps = {
   mode: ConfirmMode;
   onConfirm: () => void;
   onClose: () => void;
-  /** 동적 문구용. description에 포함된 {key}를 params[key]로 치환합니다. */
   params?: Record<string, string | number>;
 };
 

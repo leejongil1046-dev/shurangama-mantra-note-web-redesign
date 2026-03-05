@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import MantraTextView from "@/component/mantra/mantra-text-view";
 import { SHURANGAMA_MANTRA_PAGES } from "@/data/shurangama-mantra";
 import { createBlankIndices, difficultyToRatio } from "@/lib/blanks";
+import { computeGradeResult } from "@/lib/grade-memorize";
+import { getFullText } from "@/lib/mantra-format";
 import { usePagination } from "@/hooks/use-pagination";
 import { useSettingStore } from "@/store/setting-store";
 import { useMemorizeStore } from "@/store/memorize-store";
@@ -12,6 +14,7 @@ import PaginationControls from "@/component/layout/pagination-controls";
 import PageRangeLegend from "@/component/settings/page-range-legend";
 import MemorizeActions from "@/component/memorize/memorize-actions";
 import ConfirmModal from "@/component/ui/confirm-modal";
+import GradeResultModal from "@/component/memorize/grade-result-modal";
 
 export default function MemorizePage() {
   const { memorize, hasHydrated } = useSettingStore();
@@ -28,9 +31,11 @@ export default function MemorizePage() {
     blankByPage,
     answersByPage,
     lastPageIndex,
+    gradeResult,
     startSession,
     setAnswer,
     setLastPageIndex,
+    setGradeResult,
     resetSession,
   } = useMemorizeStore();
 
@@ -80,6 +85,7 @@ export default function MemorizePage() {
   };
 
   const [isGradeConfirmOpen, setIsGradeConfirmOpen] = useState(false);
+  const [isResultModalOpen, setIsResultModalOpen] = useState(false);
 
   const { totalBlanks, filledCount } = useMemo(() => {
     let total = 0;
@@ -95,13 +101,38 @@ export default function MemorizePage() {
   }, [blankByPage, answersByPage]);
 
   const handleGradeClick = () => {
-    setIsGradeConfirmOpen(true);
+    if (gradeResult) {
+      setIsResultModalOpen(true);
+    } else {
+      setIsGradeConfirmOpen(true);
+    }
   };
 
   const handleGradeConfirm = () => {
     setIsGradeConfirmOpen(false);
-    // TODO: 실제 채점 및 결과 모달
+    const result = computeGradeResult(
+      blankByPage,
+      answersByPage,
+      selectedPages,
+    );
+    setGradeResult(result);
+    setIsResultModalOpen(true);
   };
+
+  const gradeDisplay = useMemo(() => {
+    if (!gradeResult || !currentPage) return undefined;
+    const fullText = getFullText(currentPage.mantra);
+    const byBlank = gradeResult.correctByBlank[currentIndex];
+    if (!byBlank) return undefined;
+    const out: Record<number, { correctChar: string; isCorrect: boolean }> = {};
+    for (const charIndex of Object.keys(byBlank).map(Number)) {
+      out[charIndex] = {
+        correctChar: fullText[charIndex] ?? "",
+        isCorrect: byBlank[charIndex],
+      };
+    }
+    return out;
+  }, [gradeResult, currentPage, currentIndex]);
 
   useEffect(() => {
     if (isActive) {
@@ -118,6 +149,7 @@ export default function MemorizePage() {
           <MemorizeActions
             hasHydrated={hasHydrated}
             isActive={isActive}
+            isGraded={!!gradeResult}
             onStart={handleStartMemorize}
             onGrade={handleGradeClick}
           />
@@ -139,6 +171,16 @@ export default function MemorizePage() {
             onConfirm={handleGradeConfirm}
             onClose={() => setIsGradeConfirmOpen(false)}
           />
+
+          {gradeResult && (
+            <GradeResultModal
+              open={isResultModalOpen}
+              onClose={() => setIsResultModalOpen(false)}
+              gradeResult={gradeResult}
+              pageNumbers={selectedPages.map((p) => p.pageNumber)}
+              difficulty={difficulty}
+            />
+          )}
         </div>
 
         <div className="relative min-h-0 flex-1 overflow-auto rounded border border-gray-200 p-4">
@@ -157,14 +199,14 @@ export default function MemorizePage() {
                   blankIndices={currentBlankIndices}
                   mode="memorize"
                   answers={currentAnswers}
-                  onChangeAnswer={handleChangeAnswer}
+                  onChangeAnswer={gradeResult ? undefined : handleChangeAnswer}
+                  gradeDisplay={gradeDisplay}
                 />
               ) : (
                 <MantraTextView mantra={currentPage.mantra} />
               )}
             </div>
           ) : (
-            // hydration 전에는 대략적인 높이만 가진 빈 박스를 렌더
             <div className="min-w-[800px] h-[600px]" />
           )}
         </div>

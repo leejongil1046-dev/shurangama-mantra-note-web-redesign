@@ -4,6 +4,8 @@ const buttonClass =
 type MemorizeActionsProps = {
   hasHydrated: boolean;
   isActive: boolean;
+  /** 채점 완료 여부. true면 버튼이 "결과확인"으로 표시됨 */
+  isGraded?: boolean;
   onStart: () => void;
   onGrade?: () => void;
 };
@@ -11,6 +13,7 @@ type MemorizeActionsProps = {
 export default function MemorizeActions({
   hasHydrated,
   isActive,
+  isGraded = false,
   onStart,
   onGrade,
 }: MemorizeActionsProps) {
@@ -35,7 +38,7 @@ export default function MemorizeActions({
         disabled={!onGrade}
         className={buttonClass + (onGrade ? "" : " opacity-60 cursor-default")}
       >
-        채점하기
+        {isGraded ? "결과확인" : "채점하기"}
       </button>
     </div>
   );
