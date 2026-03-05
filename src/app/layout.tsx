@@ -45,11 +45,9 @@ export default function RootLayout({
 
           <MainNav />
 
-          <main className="flex flex-1 flex-col min-w-[1000px]">
-            {children}
-          </main>
+          <main className="flex flex-1 flex-col">{children}</main>
 
-          <footer className="border-t border-gray-200 px-6 py-3 text-xs">
+          <footer className="h-[50px] border-t border-gray-200 px-6 py-3 text-xs">
             <div className="mx-auto flex items-center justify-center gap-4 h-5">
               <span>© {new Date().getFullYear()} 능엄주 암기 노트</span>
             </div>
