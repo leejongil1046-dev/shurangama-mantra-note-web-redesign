@@ -12,9 +12,39 @@ export default function MoreLayout({ children }: MoreLayoutProps) {
         <nav className="text-xl w-full text-center">
           <Link
             href="/more/video"
+            className="block rounded py-6 text-gray-500 border-b border-gray-200 hover:bg-gray-50"
+          >
+            개발자 이야기
+          </Link>
+          <Link
+            href="/more/video"
             className="block rounded py-6 text-gray-900 font-medium border-b border-gray-200 hover:bg-gray-50"
           >
             능엄주 독송 영상
+          </Link>
+          <Link
+            href="/more/video"
+            className="block rounded py-6 text-gray-500 border-b border-gray-200 hover:bg-gray-50"
+          >
+            회원 정보
+          </Link>
+          <Link
+            href="/more/video"
+            className="block rounded py-6 text-gray-500 border-b border-gray-200 hover:bg-gray-50"
+          >
+            기록보기
+          </Link>
+          <Link
+            href="/more/video"
+            className="block rounded py-6 text-gray-500 border-b border-gray-200 hover:bg-gray-50"
+          >
+            개인정보처리방침
+          </Link>
+          <Link
+            href="/more/video"
+            className="block rounded py-6 text-gray-500 border-b border-gray-200 hover:bg-gray-50"
+          >
+            이용약관
           </Link>
           <Link
             href="/more/video"

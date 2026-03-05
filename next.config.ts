@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 // next.config.ts
-const nextConfig = {
+const nextConfig: NextConfig = {
   async headers() {
     return [
       {
