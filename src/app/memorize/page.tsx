@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import MantraTextView from "@/component/mantra/mantra-text-view";
 import { SHURANGAMA_MANTRA_PAGES } from "@/data/shurangama-mantra";
 import { createBlankIndices, difficultyToRatio } from "@/lib/blanks";
-import { computeGradeResult } from "@/lib/grade-memorize";
-import { getFullText } from "@/lib/mantra-format";
 import { usePagination } from "@/hooks/use-pagination";
+import { useMemorizeGrading } from "@/hooks/use-memorize-grading";
 import { useSettingStore } from "@/store/setting-store";
 import { useMemorizeStore } from "@/store/memorize-store";
 import TopSettingButton from "@/component/layout/top-setting-button";
@@ -84,55 +83,25 @@ export default function MemorizePage() {
     setCurrentIndex(0);
   };
 
-  const [isGradeConfirmOpen, setIsGradeConfirmOpen] = useState(false);
-  const [isResultModalOpen, setIsResultModalOpen] = useState(false);
-
-  const { totalBlanks, filledCount } = useMemo(() => {
-    let total = 0;
-    let filled = 0;
-    Object.keys(blankByPage).forEach((key) => {
-      const pageIndex = Number(key);
-      const blanks = blankByPage[pageIndex]?.length ?? 0;
-      const answers = answersByPage[pageIndex] ?? {};
-      total += blanks;
-      filled += Object.keys(answers).length;
-    });
-    return { totalBlanks: total, filledCount: filled };
-  }, [blankByPage, answersByPage]);
-
-  const handleGradeClick = () => {
-    if (gradeResult) {
-      setIsResultModalOpen(true);
-    } else {
-      setIsGradeConfirmOpen(true);
-    }
-  };
-
-  const handleGradeConfirm = () => {
-    setIsGradeConfirmOpen(false);
-    const result = computeGradeResult(
-      blankByPage,
-      answersByPage,
-      selectedPages,
-    );
-    setGradeResult(result);
-    setIsResultModalOpen(true);
-  };
-
-  const gradeDisplay = useMemo(() => {
-    if (!gradeResult || !currentPage) return undefined;
-    const fullText = getFullText(currentPage.mantra);
-    const byBlank = gradeResult.correctByBlank[currentIndex];
-    if (!byBlank) return undefined;
-    const out: Record<number, { correctChar: string; isCorrect: boolean }> = {};
-    for (const charIndex of Object.keys(byBlank).map(Number)) {
-      out[charIndex] = {
-        correctChar: fullText[charIndex] ?? "",
-        isCorrect: byBlank[charIndex],
-      };
-    }
-    return out;
-  }, [gradeResult, currentPage, currentIndex]);
+  const {
+    totalBlanks,
+    filledCount,
+    gradeDisplay,
+    isGradeConfirmOpen,
+    setIsGradeConfirmOpen,
+    isResultModalOpen,
+    setIsResultModalOpen,
+    handleGradeClick,
+    handleGradeConfirm,
+  } = useMemorizeGrading({
+    blankByPage,
+    answersByPage,
+    selectedPages,
+    gradeResult,
+    setGradeResult,
+    currentIndex,
+    currentPage: currentPage ?? undefined,
+  });
 
   useEffect(() => {
     if (isActive) {
