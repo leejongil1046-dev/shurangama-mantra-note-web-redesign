@@ -7,7 +7,7 @@ import PaginationControls from "@/component/layout/pagination-controls";
 import TopSettingButton from "@/component/layout/top-setting-button";
 import PageRangeLegend from "@/component/settings/page-range-legend";
 import { SHURANGAMA_MANTRA_PAGES } from "@/data/shurangama-mantra";
-import { createBlankIndices, difficultyToRatio } from "@/lib/blanks";
+import { createBlankIndices, difficultyToRatio } from "@/lib/mantra-blank";
 import { usePagination } from "@/hooks/use-pagination";
 import { useSettingStore } from "@/store/setting-store";
 

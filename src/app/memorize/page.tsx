@@ -3,7 +3,7 @@
 import { useEffect, useMemo } from "react";
 import MantraTextView from "@/component/mantra/mantra-text-view";
 import { SHURANGAMA_MANTRA_PAGES } from "@/data/shurangama-mantra";
-import { createBlankIndices, difficultyToRatio } from "@/lib/blanks";
+import { createBlankIndices, difficultyToRatio } from "@/lib/mantra-blank";
 import { usePagination } from "@/hooks/use-pagination";
 import { useMemorizeGrading } from "@/hooks/use-memorize-grading";
 import { useSettingStore } from "@/store/setting-store";
