@@ -200,7 +200,7 @@ export const SHURANGAMA_MANTRA_PAGE_7: Mantra = [
   { line: "아수라비드라파카야 파트", indent: 0 },
   { line: "사르바데베뱧 파트", indent: 0 },
   { line: "사르바나게뱧 파트", indent: 0 },
-  { line: "사르바얔세뱧 퍄트", indent: 0 },
+  { line: "사르바얔세뱧 파트", indent: 0 },
   { line: "사르바랔사세뱧 파트", indent: 0 },
   { line: "사르바가루데뱧 파트", indent: 0 },
   { line: "사르바간다르베뱧 파트", indent: 0 },
