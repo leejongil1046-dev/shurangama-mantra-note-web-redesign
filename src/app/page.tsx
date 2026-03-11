@@ -67,6 +67,7 @@ export default function HomePage() {
               <strong>암기하기</strong>
               <ul className="list-disc space-y-0.5 pl-5 mt-1">
                 <li>같은 난이도로 빈칸을 만들고 직접 입력한 뒤 채점하기</li>
+                <li>엔터로 다음 빈칸으로, 백스페이스로 이전 빈칸으로 이동</li>
                 <li>
                   페이지별·전체 정답률 확인, 맞은 글자는 파란색·틀린 글자는
                   빨간색으로 다시 보기
