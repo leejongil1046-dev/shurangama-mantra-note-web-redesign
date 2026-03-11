@@ -119,9 +119,6 @@ export default function MemorizePage() {
 
   if (!currentPage) return null;
 
-  console.log("currentBlankIndicesArray = ", currentBlankIndicesArray);
-  console.log("sortedBlankIndices = ", sortedBlankIndices);
-
   return (
     <div className="mx-auto h-full w-[1200px]">
       <section className="flex w-full h-full min-w-0 flex-col overflow-hidden pr-5 pl-5 pb-5">
