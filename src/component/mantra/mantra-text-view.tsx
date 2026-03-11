@@ -99,7 +99,7 @@ export default function MantraTextView({
   
     focusInputAtEnd(prevInput);
   };
-  
+
   const handleBlankInputKeyDown = (
     e: React.KeyboardEvent<HTMLInputElement>,
     globalIndex: number,
@@ -187,7 +187,7 @@ export default function MantraTextView({
               onCompositionEnd={() => {
                 isComposingRef.current = false;
               }}
-              className="pb-1 text-center font-mantra font-semibold focus:outline-gray-500"
+              className="pb-0.5 text-center font-mantra font-semibold focus:outline-gray-500"
               style={{
                 width: charBoxWidth,
                 height: charBoxHeight,
