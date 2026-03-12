@@ -10,6 +10,8 @@ import { SHURANGAMA_MANTRA_PAGES } from "@/data/shurangama-mantra";
 import { createBlankIndices, difficultyToRatio } from "@/lib/mantra-blank";
 import { usePagination } from "@/hooks/use-pagination";
 import { useSettingStore } from "@/store/setting-store";
+import ModalActionButton from "@/component/ui/modal-action-button";
+import ActionButton from "@/component/ui/action-button";
 
 type BlankByPage = Record<number, Set<number>>;
 
@@ -55,7 +57,6 @@ export default function PracticePage() {
   };
 
   const handleResetPractice = () => {
-    // 빈칸 정보와 표시 상태를 초기화하고, 현재 설정된 페이지 범위의 첫 페이지로 이동
     setBlankByPage({});
     setShowBlanks(false);
     setCurrentIndex(0);
@@ -67,12 +68,13 @@ export default function PracticePage() {
     <div className="mx-auto h-full w-[1200px]">
       <section className="flex w-full h-full min-w-0 flex-col overflow-hidden pr-5 pl-5 pb-5">
         <div className="flex items-center justify-between p-4">
-          <div className="flex flex-row justify-start gap-5 w-[200px]">
+          <div className="flex flex-row justify-start gap-5 w-[400px]">
             <ToggleSwitch
               label="빈칸"
               checked={showBlanks}
               onChange={handleToggleBlanks}
             />
+            <ActionButton label="초기화" onClick={handleResetPractice} />
           </div>
 
           <PaginationControls
@@ -110,7 +112,6 @@ export default function PracticePage() {
               )}
             </div>
           ) : (
-            // hydration 전에는 대략적인 높이만 가진 빈 박스를 렌더
             <div className="min-w-[800px] h-[600px]" />
           )}
         </div>

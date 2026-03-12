@@ -23,28 +23,37 @@ export default function SettingModal({
   const practice = useSettingStore((s) => s.practice);
   const test = useSettingStore((s) => s.test);
   const slice = mode === "practice" ? practice : test;
-  const { pageStart, pageEnd, difficulty } = slice;
+  // const { pageStart, pageEnd, difficulty } = slice;
+  const { pageStart, pageEnd } = slice;
 
   const setPracticePageRange = useSettingStore((s) => s.setPracticePageRange);
-  const setPracticeDifficulty = useSettingStore((s) => s.setPracticeDifficulty);
+  // const setPracticeDifficulty = useSettingStore((s) => s.setPracticeDifficulty);
   const setTestPageRange = useSettingStore((s) => s.setTestPageRange);
-  const setTestDifficulty = useSettingStore((s) => s.setTestDifficulty);
+  // const setTestDifficulty = useSettingStore((s) => s.setTestDifficulty);
   const resetTestSession = useTestStore((s) => s.resetSession);
 
   const [tempRange, setTempRange] = useState<[number, number]>([
     pageStart,
     pageEnd,
   ]);
-  const [tempDifficulty, setTempDifficulty] = useState<Difficulty>(difficulty);
+  // const [tempDifficulty, setTempDifficulty] = useState<Difficulty>(difficulty);
+
+  // const isChanged = useMemo(() => {
+  //   const [tempStart, tempEnd] = tempRange;
+  //   return (
+  //     tempStart !== pageStart ||
+  //     tempEnd !== pageEnd ||
+  //     tempDifficulty !== difficulty
+  //   );
+  // }, [tempRange, tempDifficulty, pageStart, pageEnd, difficulty]);
 
   const isChanged = useMemo(() => {
     const [tempStart, tempEnd] = tempRange;
     return (
       tempStart !== pageStart ||
-      tempEnd !== pageEnd ||
-      tempDifficulty !== difficulty
+      tempEnd !== pageEnd
     );
-  }, [tempRange, tempDifficulty, pageStart, pageEnd, difficulty]);
+  }, [tempRange, pageStart, pageEnd]);
 
   if (!open) return null;
 
@@ -52,10 +61,10 @@ export default function SettingModal({
     const [start, end] = tempRange;
     if (mode === "practice") {
       setPracticePageRange(start, end);
-      setPracticeDifficulty(tempDifficulty);
+      // setPracticeDifficulty(tempDifficulty);
     } else {
       setTestPageRange(start, end);
-      setTestDifficulty(tempDifficulty);
+      // setTestDifficulty(tempDifficulty);
       resetTestSession();
     }
     window.location.reload();
@@ -77,10 +86,10 @@ export default function SettingModal({
             onChange={setTempRange}
           />
 
-          <DifficultySetting
+          {/* <DifficultySetting
             value={tempDifficulty}
             onChange={setTempDifficulty}
-          />
+          /> */}
         </div>
 
         <div className="mt-0 flex justify-end gap-3 p-6">
