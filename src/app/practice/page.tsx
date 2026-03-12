@@ -10,7 +10,7 @@ import { SHURANGAMA_MANTRA_PAGES } from "@/data/shurangama-mantra";
 import { createBlankIndices, difficultyToRatio } from "@/lib/mantra-blank";
 import { usePagination } from "@/hooks/use-pagination";
 import { useSettingStore } from "@/store/setting-store";
-import ModalActionButton from "@/component/ui/modal-action-button";
+// import ModalActionButton from "@/component/ui/modal-action-button";
 import ActionButton from "@/component/ui/action-button";
 
 type BlankByPage = Record<number, Set<number>>;

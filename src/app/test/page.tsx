@@ -128,7 +128,7 @@ export default function TestPage() {
             isActive={isActive}
             isGraded={!!gradeResult}
             onStart={handleStartTest}
-            onGrade={handleGradeClick}
+            onGrade={handleGradeConfirm}
             onReset={handleResetTest}
           />
 
