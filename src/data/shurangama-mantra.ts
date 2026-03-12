@@ -317,6 +317,7 @@ export const SHURANGAMA_MANTRA_PAGE_11: Mantra = [
   { line: "니탸즈바라 비사마즈바라 바티카", indent: 0 },
   { line: "파이티카", indent: 0 },
   { line: "스레스미카", indent: 0 },
+  { line: "산디파티카", indent: 0 },
   { line: "사르바즈바라 시로르티 아르다바베다카", indent: 0 },
   { line: "아로차카", indent: 0 },
   { line: "앜시로감", indent: 0 },
