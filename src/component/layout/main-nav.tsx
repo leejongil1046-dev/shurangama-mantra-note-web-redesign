@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { useSettingStore, type Difficulty } from "@/store/setting-store";
 
 const NAV_ITEMS = [
   { href: "/", label: "시작하기", key: "home" },
@@ -12,10 +13,17 @@ const NAV_ITEMS = [
 ] as const;
 
 export default function MainNav() {
+  const router = useRouter();
   const pathname = usePathname();
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const [lineStyle, setLineStyle] = useState({ left: 0, width: 0 });
+  const [practiceLineStyle, setPracticeLineStyle] = useState({
+    left: 0,
+    width: 0,
+  });
+  const [isPracticeOpen, setIsPracticeOpen] = useState(false);
+  const setPracticeDifficulty = useSettingStore((s) => s.setPracticeDifficulty);
 
   const getActiveKey = () => {
     if (pathname === "/") return "home";
@@ -27,6 +35,9 @@ export default function MainNav() {
 
   const activeKey = getActiveKey();
   const activeIndex = NAV_ITEMS.findIndex((item) => item.key === activeKey);
+  const practiceIndex = NAV_ITEMS.findIndex(
+    (item) => item.key === "practice",
+  );
 
   useEffect(() => {
     if (activeIndex < 0 || !containerRef.current) return;
@@ -40,6 +51,35 @@ export default function MainNav() {
     });
   }, [activeIndex, pathname]);
 
+  useEffect(() => {
+    if (practiceIndex < 0 || !containerRef.current) return;
+    const el = itemRefs.current[practiceIndex];
+    if (!el) return;
+    const container = containerRef.current.getBoundingClientRect();
+    const item = el.getBoundingClientRect();
+    setPracticeLineStyle({
+      left: item.left - container.left,
+      width: item.width,
+    });
+  }, [practiceIndex, pathname]);
+
+  const handleClickPracticeNav = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    setIsPracticeOpen((prev) => !prev);
+  };
+
+  const handleSelectDifficulty = (difficulty: Difficulty) => {
+    setPracticeDifficulty(difficulty);
+    setIsPracticeOpen(false);
+    router.push("/practice");
+  };
+
+  const difficultyItems: { value: Difficulty; label: string }[] = [
+    { value: "easy", label: "쉬움" },
+    { value: "medium", label: "보통" },
+    { value: "hard", label: "어려움" },
+  ];
+
   return (
     <nav className="flex h-16 w-full items-center border-b border-gray-200">
       <div
@@ -48,6 +88,7 @@ export default function MainNav() {
       >
         {NAV_ITEMS.map((item, index) => {
           const isActive = item.key === activeKey;
+          const isPractice = item.key === "practice";
           return (
             <Link
               key={item.key}
@@ -55,6 +96,7 @@ export default function MainNav() {
                 itemRefs.current[index] = el;
               }}
               href={item.href}
+              onClick={isPractice ? handleClickPracticeNav : undefined}
               className={`relative z-10 flex h-full flex-1 items-center justify-center px-3 font-medium cursor-pointer transition-colors ${
                 isActive
                   ? "text-gray-900 hover:text-gray-900"
@@ -73,6 +115,35 @@ export default function MainNav() {
           }}
           aria-hidden
         />
+
+        {/* 연습하기 난이도 선택 패널 */}
+        <div
+          className="pointer-events-none absolute bottom-0 z-10 translate-y-full"
+          style={{
+            left: practiceLineStyle.left,
+            width: practiceLineStyle.width,
+          }}
+        >
+          <div
+            className={`pointer-events-auto overflow-hidden rounded-b-xl border border-gray-200 bg-white shadow-md transition-all duration-300 ease-out ${
+              isPracticeOpen
+                ? "max-h-50 opacity-100 translate-y-0"
+                : "max-h-0 opacity-0 -translate-y-1"
+            }`}
+          >
+            <div className="grid text-xl divide-y divide-gray-200">
+              {difficultyItems.map((item) => (
+                <div
+                  key={item.value}
+                  onClick={() => handleSelectDifficulty(item.value)}
+                  className="flex-1 w-full h-full px-5 py-3 text-center text-gray-700 whitespace-nowrap transition-colors cursor-pointer hover:bg-gray-100"
+                >
+                  {item.label}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </nav>
   );
