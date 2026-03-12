@@ -129,6 +129,7 @@ export default function TestPage() {
             isGraded={!!gradeResult}
             onStart={handleStartTest}
             onGrade={handleGradeClick}
+            onReset={handleResetTest}
           />
 
           <PaginationControls
