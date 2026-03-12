@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Image from "next/image";
+// import Image from "next/image";
 import SettingModal, {
   type SettingMode,
 } from "@/component/settings/setting-modal";
@@ -22,10 +22,10 @@ export default function TopSettingButton({
   const confirmMode: ConfirmMode =
     mode === "practice" ? "reset-practice" : "reset-test";
 
-  const handleClickReset = () => {
-    if (!onReset) return;
-    setIsResetConfirmOpen(true);
-  };
+  // const handleClickReset = () => {
+  //   if (!onReset) return;
+  //   setIsResetConfirmOpen(true);
+  // };
 
   const handleConfirmReset = () => {
     if (onReset) {

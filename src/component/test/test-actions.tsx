@@ -1,7 +1,7 @@
 import ActionButton from "../ui/action-button";
 
-const buttonClass =
-  "rounded border w-[80px] py-1 text-sm cursor-pointer hover:bg-gray-100";
+// const buttonClass =
+//   "rounded border w-[80px] py-1 text-sm cursor-pointer hover:bg-gray-100";
 
 type MemorizeActionsProps = {
   hasHydrated: boolean;
@@ -30,7 +30,7 @@ export default function MemorizeActions({
         {/* <button type="button" onClick={onStart} className={buttonClass}>
           암기 시작
         </button> */}
-        <ActionButton label="암기 시작" onClick={onStart} />
+        <ActionButton label="테스트 시작" onClick={onStart} />
       </div>
     );
   }
@@ -45,8 +45,8 @@ export default function MemorizeActions({
       >
         {isGraded ? "결과확인" : "채점하기"}
       </button>  */}
-      <ActionButton label={isGraded ? "결과확인" : "채점하기"} onClick={onGrade} />
-      <ActionButton label="초기화" onClick={onReset} />
+      <ActionButton label={isGraded ? "결과확인" : "채점하기"} onClick={() => { if (onGrade) onGrade()}} />
+      <ActionButton label="초기화" onClick={() => { if (onReset) onReset()}} />
     </div>
   );
 }

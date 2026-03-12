@@ -19,7 +19,7 @@ export default function PageRangeLegend({
 }: PageRangeLegendProps) {
   return (
     <div
-      className="absolute top-3 right-3 flex flex-col gap-0.5 rounded bg-gray-50/95 px-3 py-2 text-sm text-gray-600 shadow-sm ring-1 ring-gray-200/80"
+      className="absolute top-3 right-3 flex flex-col gap-0.5 rounded bg-gray-50/95 px-3 py-2 text-base text-gray-600 shadow-sm ring-1 ring-gray-200/80"
       aria-label="선택 범위 및 난이도"
     >
       <span>

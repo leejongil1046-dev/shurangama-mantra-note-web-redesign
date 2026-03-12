@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useSettingStore, type Difficulty } from "@/store/setting-store";
+import { useTestStore } from "@/store/test-store";
 
 const NAV_ITEMS = [
   { href: "/", label: "시작하기", key: "home" },
@@ -22,8 +23,15 @@ export default function MainNav() {
     left: 0,
     width: 0,
   });
+  const [testLineStyle, setTestLineStyle] = useState({
+    left: 0,
+    width: 0,
+  });
   const [isPracticeOpen, setIsPracticeOpen] = useState(false);
+  const [isTestOpen, setIsTestOpen] = useState(false);
   const setPracticeDifficulty = useSettingStore((s) => s.setPracticeDifficulty);
+  const setTestDifficulty = useSettingStore((s) => s.setTestDifficulty);
+  const resetTestSession = useTestStore((s) => s.resetSession);
 
   const getActiveKey = () => {
     if (pathname === "/") return "home";
@@ -38,6 +46,7 @@ export default function MainNav() {
   const practiceIndex = NAV_ITEMS.findIndex(
     (item) => item.key === "practice",
   );
+  const testIndex = NAV_ITEMS.findIndex((item) => item.key === "test");
 
   useEffect(() => {
     if (activeIndex < 0 || !containerRef.current) return;
@@ -63,15 +72,41 @@ export default function MainNav() {
     });
   }, [practiceIndex, pathname]);
 
+  useEffect(() => {
+    if (testIndex < 0 || !containerRef.current) return;
+    const el = itemRefs.current[testIndex];
+    if (!el) return;
+    const container = containerRef.current.getBoundingClientRect();
+    const item = el.getBoundingClientRect();
+    setTestLineStyle({
+      left: item.left - container.left,
+      width: item.width,
+    });
+  }, [testIndex, pathname]);
+
   const handleClickPracticeNav = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     setIsPracticeOpen((prev) => !prev);
+    setIsTestOpen(false);
   };
 
-  const handleSelectDifficulty = (difficulty: Difficulty) => {
+  const handleClickTestNav = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    setIsTestOpen((prev) => !prev);
+    setIsPracticeOpen(false);
+  };
+
+  const handleSelectPracticeDifficulty = (difficulty: Difficulty) => {
     setPracticeDifficulty(difficulty);
     setIsPracticeOpen(false);
     router.push("/practice");
+  };
+
+  const handleSelectTestDifficulty = (difficulty: Difficulty) => {
+    setTestDifficulty(difficulty);
+    resetTestSession();
+    setIsTestOpen(false);
+    router.push("/test");
   };
 
   const difficultyItems: { value: Difficulty; label: string }[] = [
@@ -89,6 +124,7 @@ export default function MainNav() {
         {NAV_ITEMS.map((item, index) => {
           const isActive = item.key === activeKey;
           const isPractice = item.key === "practice";
+          const isTest = item.key === "test";
           return (
             <Link
               key={item.key}
@@ -96,7 +132,13 @@ export default function MainNav() {
                 itemRefs.current[index] = el;
               }}
               href={item.href}
-              onClick={isPractice ? handleClickPracticeNav : undefined}
+              onClick={
+                isPractice
+                  ? handleClickPracticeNav
+                  : isTest
+                    ? handleClickTestNav
+                    : undefined
+              }
               className={`relative z-10 flex h-full flex-1 items-center justify-center px-3 font-medium cursor-pointer transition-colors ${
                 isActive
                   ? "text-gray-900 hover:text-gray-900"
@@ -135,7 +177,36 @@ export default function MainNav() {
               {difficultyItems.map((item) => (
                 <div
                   key={item.value}
-                  onClick={() => handleSelectDifficulty(item.value)}
+                  onClick={() => handleSelectPracticeDifficulty(item.value)}
+                  className="flex-1 w-full h-full px-5 py-3 text-center text-gray-700 whitespace-nowrap transition-colors cursor-pointer hover:bg-gray-100"
+                >
+                  {item.label}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* 테스트하기 난이도 선택 패널 */}
+        <div
+          className="pointer-events-none absolute bottom-0 z-10 translate-y-full"
+          style={{
+            left: testLineStyle.left,
+            width: testLineStyle.width,
+          }}
+        >
+          <div
+            className={`pointer-events-auto overflow-hidden rounded-b-xl border border-gray-200 bg-white shadow-md transition-all duration-300 ease-out ${
+              isTestOpen
+                ? "max-h-50 opacity-100 translate-y-0"
+                : "max-h-0 opacity-0 -translate-y-1"
+            }`}
+          >
+            <div className="grid text-xl divide-y divide-gray-200">
+              {difficultyItems.map((item) => (
+                <div
+                  key={item.value}
+                  onClick={() => handleSelectTestDifficulty(item.value)}
                   className="flex-1 w-full h-full px-5 py-3 text-center text-gray-700 whitespace-nowrap transition-colors cursor-pointer hover:bg-gray-100"
                 >
                   {item.label}
