@@ -5,7 +5,7 @@ import MantraTextView from "@/component/mantra/mantra-text-view";
 import { SHURANGAMA_MANTRA_PAGES } from "@/data/shurangama-mantra";
 import { createBlankIndices, difficultyToRatio } from "@/lib/mantra-blank";
 import { usePagination } from "@/hooks/use-pagination";
-import { useMemorizeGrading } from "@/hooks/use-test-grading";
+import { useTestGrading } from "@/hooks/use-test-grading";
 import { type Difficulty, useSettingStore } from "@/store/setting-store";
 import TopSettingButton from "@/component/layout/top-setting-button";
 import PaginationControls from "@/component/layout/pagination-controls";
@@ -115,7 +115,7 @@ export default function TestPage() {
     setIsResultModalOpen,
     // handleGradeClick,
     handleGradeConfirm,
-  } = useMemorizeGrading({
+  } = useTestGrading({
     blankByPage,
     answersByPage,
     selectedPages,

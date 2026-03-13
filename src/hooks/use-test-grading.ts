@@ -9,7 +9,7 @@ import type { MantraPageItem } from "@/types/mantra";
 
 type AnswersByPage = Record<number, Record<number, string>>;
 
-type UseMemorizeGradingParams = {
+type UseTestGradingParams = {
   blankByPage: BlankByPageState;
   answersByPage: AnswersByPage;
   selectedPages: MantraPageItem[];
@@ -19,7 +19,7 @@ type UseMemorizeGradingParams = {
   currentPage: MantraPageItem | undefined;
 };
 
-export function useMemorizeGrading({
+export function useTestGrading({
   blankByPage,
   answersByPage,
   selectedPages,
@@ -27,7 +27,7 @@ export function useMemorizeGrading({
   setGradeResult,
   currentPageIndex,
   currentPage,
-}: UseMemorizeGradingParams) {
+}: UseTestGradingParams) {
   const [isGradeConfirmOpen, setIsGradeConfirmOpen] = useState(false);
   const [isResultModalOpen, setIsResultModalOpen] = useState(false);
 
