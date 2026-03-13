@@ -1,10 +1,10 @@
 import type { Difficulty } from "@/store/setting-store";
 
-const difficultyLabel: Record<Difficulty, string> = {
-  easy: "쉬움",
-  medium: "보통",
-  hard: "어려움",
-};
+// const difficultyLabel: Record<Difficulty, string> = {
+//   easy: "쉬움",
+//   medium: "보통",
+//   hard: "어려움",
+// };
 
 type PageRangeLegendProps = {
   pageStart: number;
@@ -15,7 +15,7 @@ type PageRangeLegendProps = {
 export default function PageRangeLegend({
   pageStart,
   pageEnd,
-  difficulty,
+  // difficulty,
 }: PageRangeLegendProps) {
   return (
     <div
@@ -26,10 +26,10 @@ export default function PageRangeLegend({
         <span className="font-medium text-gray-500">페이지: </span> {pageStart}~
         {pageEnd}
       </span>
-      <span>
+      {/* <span>
         <span className="font-medium text-gray-500">난이도: </span>{" "}
         {difficultyLabel[difficulty]}
-      </span>
+      </span> */}
     </div>
   );
 }

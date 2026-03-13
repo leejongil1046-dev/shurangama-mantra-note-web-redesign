@@ -1,46 +1,38 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useMemo, useState } from "react";
 import MantraTextView from "@/component/mantra/mantra-text-view";
 import { SHURANGAMA_MANTRA_PAGES } from "@/data/shurangama-mantra";
 import { createBlankIndices, difficultyToRatio } from "@/lib/mantra-blank";
 import { usePagination } from "@/hooks/use-pagination";
 import { useMemorizeGrading } from "@/hooks/use-test-grading";
-import { useSettingStore } from "@/store/setting-store";
-import { useTestStore } from "@/store/test-store";
+import { type Difficulty, useSettingStore } from "@/store/setting-store";
 import TopSettingButton from "@/component/layout/top-setting-button";
 import PaginationControls from "@/component/layout/pagination-controls";
 import PageRangeLegend from "@/component/settings/page-range-legend";
-import TestActions from "@/component/test/test-actions";
 import ConfirmModal from "@/component/ui/confirm-modal";
 import GradeResultModal from "@/component/test/grade-result-modal";
+import ActionButton from "@/component/ui/action-button";
+import type { GradeResult } from "@/lib/grade-test";
+
+type BlankByPageState = Record<number, number[]>;
+type AnswersByPageState = Record<number, Record<number, string>>;
 
 export default function TestPage() {
   const { test, hasHydrated, fontSize } = useSettingStore();
-  const { pageStart, pageEnd, difficulty } = test;
-  const ratio = difficultyToRatio[difficulty];
+  const { pageStart, pageEnd } = test;
+
+  const [selectedDifficulty, setSelectedDifficulty] =
+    useState<Difficulty | null>(null);
+  const [isActive, setIsActive] = useState(false);
+  const [blankByPage, setBlankByPage] = useState<BlankByPageState>({});
+  const [answersByPage, setAnswersByPage] = useState<AnswersByPageState>({});
+  const [gradeResult, setGradeResult] = useState<GradeResult | null>(null);
 
   const selectedPages = useMemo(
     () => SHURANGAMA_MANTRA_PAGES.slice(pageStart - 1, pageEnd),
     [pageStart, pageEnd],
   );
-
-  const {
-    isActive,
-    blankByPage,
-    answersByPage,
-    lastPageIndex,
-    gradeResult,
-    startSession,
-    setAnswer,
-    setLastPageIndex,
-    setGradeResult,
-    resetSession,
-  } = useTestStore();
-
-  const initialIndex = isActive
-    ? Math.min(lastPageIndex, Math.max(selectedPages.length - 1, 0))
-    : 0;
 
   const {
     currentIndex: currentPageIndex,
@@ -52,13 +44,18 @@ export default function TestPage() {
     setCurrentIndex,
   } = usePagination({
     items: selectedPages,
-    initialIndex,
   });
 
   const currentAnswers = answersByPage[currentPageIndex] ?? {};
 
   const handleChangeAnswer = (index: number, value: string) => {
-    setAnswer(currentPageIndex, index, value);
+    setAnswersByPage((prev) => ({
+      ...prev,
+      [currentPageIndex]: {
+        ...(prev[currentPageIndex] ?? {}),
+        [index]: value,
+      },
+    }));
   };
 
   const currentBlankIndicesArray = useMemo(
@@ -72,22 +69,39 @@ export default function TestPage() {
     [currentBlankIndicesArray],
   );
 
-  const handleStartTest = () => {
+  const handleResetTest = () => {
+    setIsActive(false);
+    setBlankByPage({});
+    setAnswersByPage({});
+    setGradeResult(null);
+    setSelectedDifficulty(null);
+    setCurrentIndex(0);
+  };
+
+  const createBlankByPageForDifficulty = (
+    targetDifficulty: Difficulty,
+  ): Record<number, number[]> => {
+    const targetRatio = difficultyToRatio[targetDifficulty];
     const nextBlankByPage: Record<number, number[]> = {};
 
     selectedPages.forEach((page, index) => {
-      const indices = createBlankIndices(page.mantra, ratio);
+      const indices = createBlankIndices(page.mantra, targetRatio);
       nextBlankByPage[index] = Array.from(indices);
     });
 
-    startSession({
-      blankByPage: nextBlankByPage,
-      initialPageIndex: currentPageIndex,
-    });
+    return nextBlankByPage;
   };
 
-  const handleResetTest = () => {
-    resetSession();
+  const handleSelectDifficulty = (targetDifficulty: Difficulty) => {
+    // 난이도 선택 시: 기존 테스트 세션을 초기화하고,
+    // 새 난이도로 빈칸을 생성한 뒤 바로 테스트를 시작한다.
+    const nextBlankByPage = createBlankByPageForDifficulty(targetDifficulty);
+
+    setIsActive(true);
+    setSelectedDifficulty(targetDifficulty);
+    setBlankByPage(nextBlankByPage);
+    setAnswersByPage({});
+    setGradeResult(null);
     setCurrentIndex(0);
   };
 
@@ -99,7 +113,7 @@ export default function TestPage() {
     setIsGradeConfirmOpen,
     isResultModalOpen,
     setIsResultModalOpen,
-    handleGradeClick,
+    // handleGradeClick,
     handleGradeConfirm,
   } = useMemorizeGrading({
     blankByPage,
@@ -111,26 +125,33 @@ export default function TestPage() {
     currentPage: currentPage ?? undefined,
   });
 
-  useEffect(() => {
-    if (isActive) {
-      setLastPageIndex(currentPageIndex);
-    }
-  }, [currentPageIndex, isActive, setLastPageIndex]);
-
   if (!currentPage) return null;
 
   return (
     <div className="mx-auto h-full w-[1200px]">
       <section className="flex w-full h-full min-w-0 flex-col overflow-hidden pr-5 pl-5 pb-5">
         <div className="flex items-center justify-between p-4">
-          <TestActions
-            hasHydrated={hasHydrated}
-            isActive={isActive}
-            isGraded={!!gradeResult}
-            onStart={handleStartTest}
-            onGrade={handleGradeConfirm}
-            onReset={handleResetTest}
-          />
+          <div className="flex flex-row justify-start gap-5 w-[400px]">
+            <ActionButton
+              label="초급"
+              onClick={() => handleSelectDifficulty("easy")}
+              isSelected={selectedDifficulty === "easy"}
+            />
+            <ActionButton
+              label="중급"
+              onClick={() => handleSelectDifficulty("medium")}
+              isSelected={selectedDifficulty === "medium"}
+            />
+            <ActionButton
+              label="고급"
+              onClick={() => handleSelectDifficulty("hard")}
+              isSelected={selectedDifficulty === "hard"}
+            />
+            <ActionButton
+              label={gradeResult ? "결과확인" : "채점하기"}
+              onClick={handleGradeConfirm}
+            />
+          </div>
 
           <PaginationControls
             isFirst={isFirst}
@@ -156,7 +177,7 @@ export default function TestPage() {
               onClose={() => setIsResultModalOpen(false)}
               gradeResult={gradeResult}
               pageNumbers={selectedPages.map((p) => p.pageNumber)}
-              difficulty={difficulty}
+              difficulty={selectedDifficulty ?? "easy"}
             />
           )}
         </div>
@@ -166,7 +187,7 @@ export default function TestPage() {
             <PageRangeLegend
               pageStart={pageStart}
               pageEnd={pageEnd}
-              difficulty={difficulty}
+              difficulty={selectedDifficulty ?? "easy"}
             />
           )}
           {hasHydrated ? (

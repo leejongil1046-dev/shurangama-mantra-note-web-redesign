@@ -16,7 +16,7 @@ type BlankByPage = Record<number, Set<number>>;
 
 export default function PracticePage() {
   const { practice, hasHydrated, fontSize } = useSettingStore();
-  const { pageStart, pageEnd, difficulty } = practice;
+  const { pageStart, pageEnd } = practice;
   const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | null>(null);
 
   const selectedPages = useMemo(
@@ -58,7 +58,6 @@ export default function PracticePage() {
     setCurrentIndex(0);
     setBlankByPage({});
     setShowBlanks(true);
-    useSettingStore.getState().setPracticeDifficulty(targetDifficulty);
     regenerateBlanks(targetDifficulty);
   };
 
@@ -91,7 +90,6 @@ export default function PracticePage() {
               onClick={() => handleSelectDifficulty("hard")}
               isSelected={selectedDifficulty === "hard"}
             />
-            <ActionButton label="초기화" onClick={handleResetPractice} />
           </div>
 
           <PaginationControls
@@ -110,7 +108,7 @@ export default function PracticePage() {
             <PageRangeLegend
               pageStart={pageStart}
               pageEnd={pageEnd}
-              difficulty={selectedDifficulty ?? difficulty}
+              difficulty={selectedDifficulty ?? "easy"}
             />
           )}
           {hasHydrated ? (
