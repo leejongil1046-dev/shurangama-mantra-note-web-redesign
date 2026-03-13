@@ -75,7 +75,7 @@ export default function SettingModal({
       <div className="w-full max-w-[800px] rounded-xl bg-white p-4 shadow-lg">
         <div className="flex items-center justify-between p-6">
           <h1 className="text-xl font-semibold">
-            설정 {mode === "practice" ? "(연습하기)" : "(능엄주 게임)"}
+            설정 {mode === "practice" ? "(연습하기)" : "(게임하기)"}
           </h1>
         </div>
 
