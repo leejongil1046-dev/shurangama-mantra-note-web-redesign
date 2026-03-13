@@ -12,15 +12,17 @@ export default function ActionButton({
   isSelected = false,
 }: ActionButtonProps) {
   const baseClass =
-    "inline-flex items-center justify-center rounded-md px-3 py-1 font-medium cursor-pointer border transition-colors";
-  const selectedClass = "border-gray-900 bg-gray-900 text-white";
+    "inline-flex items-center justify-center rounded-md px-3 py-1 font-medium border transition-colors";
+  const selectedClass =
+    "border-gray-900 bg-gray-900 text-white cursor-default";
   const defaultClass =
-    "border-gray-300 bg-transparent text-gray-800 hover:bg-gray-100";
+    "border-gray-300 bg-transparent text-gray-800 hover:bg-gray-100 cursor-pointer";
 
   return (
     <button
       type="button"
-      onClick={onClick}
+      onClick={isSelected ? undefined : onClick}
+      disabled={isSelected}
       className={`${baseClass} ${isSelected ? selectedClass : defaultClass}`}
       style={{ fontSize }}
     >
