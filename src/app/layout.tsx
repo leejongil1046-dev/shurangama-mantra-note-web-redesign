@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Noto_Serif_KR } from "next/font/google";
+import { Geist, Geist_Mono, Noto_Serif_KR, Yeon_Sung } from "next/font/google";
 import "./globals.css";
 import MainNav from "@/component/layout/main-nav";
 import Link from "next/link";
@@ -20,6 +20,12 @@ const notoSerifKR = Noto_Serif_KR({
   weight: ["400", "500", "600", "700"],
 });
 
+const yeonSung = Yeon_Sung({
+  variable: "--font-yeon-sung",
+  subsets: ["latin"],
+  weight: "400",
+});
+
 export const metadata: Metadata = {
   title: "능엄주 게임",
   description:
@@ -37,13 +43,13 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${notoSerifKR.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${notoSerifKR.variable} ${yeonSung.variable} antialiased`}
       >
         <div className="flex min-h-screen flex-col min-w-[1200px]">
           <header className="flex h-35 items-center border-b border-gray-200 px-6">
             <div className="mx-auto flex h-full items-center justify-center">
               <Link href="/">
-                <div className="font-mantra text-[45px] font-bold cursor-pointer">
+                <div className="yeon-sung-regular text-[60px] font-bold cursor-pointer">
                   능엄주 게임
                 </div>
               </Link>

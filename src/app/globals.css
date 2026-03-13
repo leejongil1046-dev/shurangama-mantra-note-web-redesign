@@ -43,6 +43,12 @@ body {
   font-family: var(--font-noto-serif-kr), "Noto Serif KR", serif;
 }
 
+.yeon-sung-regular {
+  font-family: var(--font-yeon-sung), "Yeon Sung", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+
 html {
   scrollbar-gutter: stable;
 }

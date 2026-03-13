@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const NAV_ITEMS = [
-  { href: "/", label: "시작하기", key: "home" },
-  { href: "/practice", label: "연습하기", key: "practice" },
+  // { href: "/", label: "시작하기", key: "home" },
   { href: "/test", label: "게임하기", key: "test" },
+  { href: "/practice", label: "연습하기", key: "practice" },
   { href: "/more/video", label: "더보기", key: "more" },
 ] as const;
 
