@@ -21,7 +21,7 @@ const notoSerifKR = Noto_Serif_KR({
 });
 
 export const metadata: Metadata = {
-  title: "대불정수능엄신주",
+  title: "능엄주 게임",
   description:
     "능엄주를 페이지별 읽기와 빈칸 채우기로 차근차근 암기하는 웹사이트",
   icons: {
@@ -44,7 +44,7 @@ export default function RootLayout({
             <div className="mx-auto flex h-full items-center justify-center">
               <Link href="/">
                 <div className="font-mantra text-[45px] font-bold cursor-pointer">
-                  대불정수능엄신주
+                  능엄주 게임
                 </div>
               </Link>
             </div>
