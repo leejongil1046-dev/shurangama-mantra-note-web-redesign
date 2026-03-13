@@ -2,7 +2,7 @@
 
 export default function HomePage() {
   return (
-    <div className="mx-auto flex w-[1000px] flex-col px-6 py-10">
+      <div className="mx-auto flex w-[1000px] flex-col px-6 py-10 home-hero-background">
       {/* 가운데 캐치프레이즈 섹션 */}
       <section className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
         <p className="text-sm tracking-[0.3em] text-gray-500">
@@ -87,6 +87,6 @@ export default function HomePage() {
           </p>
         </div>
       </section>
-    </div>
+      </div>
   );
 }

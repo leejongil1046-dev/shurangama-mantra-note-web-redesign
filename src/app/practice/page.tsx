@@ -2,14 +2,13 @@
 
 import { useState, useMemo } from "react";
 import MantraTextView from "@/component/mantra/mantra-text-view";
-import ToggleSwitch from "@/component/layout/toggle-switch";
 import PaginationControls from "@/component/layout/pagination-controls";
 import TopSettingButton from "@/component/layout/top-setting-button";
 import PageRangeLegend from "@/component/settings/page-range-legend";
 import { SHURANGAMA_MANTRA_PAGES } from "@/data/shurangama-mantra";
 import { createBlankIndices, difficultyToRatio } from "@/lib/mantra-blank";
 import { usePagination } from "@/hooks/use-pagination";
-import { useSettingStore } from "@/store/setting-store";
+import { useSettingStore, type Difficulty } from "@/store/setting-store";
 // import ModalActionButton from "@/component/ui/modal-action-button";
 import ActionButton from "@/component/ui/action-button";
 
@@ -18,7 +17,7 @@ type BlankByPage = Record<number, Set<number>>;
 export default function PracticePage() {
   const { practice, hasHydrated, fontSize } = useSettingStore();
   const { pageStart, pageEnd, difficulty } = practice;
-  const ratio = difficultyToRatio[difficulty];
+  const [selectedDifficulty, setSelectedDifficulty] = useState<Difficulty | null>(null);
 
   const selectedPages = useMemo(
     () => SHURANGAMA_MANTRA_PAGES.slice(pageStart - 1, pageEnd),
@@ -42,21 +41,29 @@ export default function PracticePage() {
 
   const currentBlankIndices = blankByPage[currentIndex] ?? new Set<number>();
 
-  const handleToggleBlanks = (nextChecked: boolean) => {
-    if (nextChecked && Object.keys(blankByPage).length === 0) {
-      const nextBlankByPage: BlankByPage = {};
+  const regenerateBlanks = (targetDifficulty: Difficulty) => {
+    const targetRatio = difficultyToRatio[targetDifficulty];
+    const nextBlankByPage: BlankByPage = {};
 
-      selectedPages.forEach((page, index) => {
-        nextBlankByPage[index] = createBlankIndices(page.mantra, ratio);
-      });
+    selectedPages.forEach((page, index) => {
+      nextBlankByPage[index] = createBlankIndices(page.mantra, targetRatio);
+    });
 
-      setBlankByPage(nextBlankByPage);
-    }
+    setBlankByPage(nextBlankByPage);
+  };
 
-    setShowBlanks(nextChecked);
+  const handleSelectDifficulty = (targetDifficulty: Difficulty) => {
+    // 난이도 변경 시: 인덱스를 처음으로, 빈칸 초기화 후 새 난이도로 다시 생성
+    setSelectedDifficulty(targetDifficulty);
+    setCurrentIndex(0);
+    setBlankByPage({});
+    setShowBlanks(true);
+    useSettingStore.getState().setPracticeDifficulty(targetDifficulty);
+    regenerateBlanks(targetDifficulty);
   };
 
   const handleResetPractice = () => {
+    setSelectedDifficulty(null);
     setBlankByPage({});
     setShowBlanks(false);
     setCurrentIndex(0);
@@ -69,10 +76,20 @@ export default function PracticePage() {
       <section className="flex w-full h-full min-w-0 flex-col overflow-hidden pr-5 pl-5 pb-5">
         <div className="flex items-center justify-between p-4">
           <div className="flex flex-row justify-start gap-5 w-[400px]">
-            <ToggleSwitch
-              label="빈칸"
-              checked={showBlanks}
-              onChange={handleToggleBlanks}
+            <ActionButton
+              label="초급"
+              onClick={() => handleSelectDifficulty("easy")}
+              isSelected={selectedDifficulty === "easy"}
+            />
+            <ActionButton
+              label="중급"
+              onClick={() => handleSelectDifficulty("medium")}
+              isSelected={selectedDifficulty === "medium"}
+            />
+            <ActionButton
+              label="고급"
+              onClick={() => handleSelectDifficulty("hard")}
+              isSelected={selectedDifficulty === "hard"}
             />
             <ActionButton label="초기화" onClick={handleResetPractice} />
           </div>
@@ -93,7 +110,7 @@ export default function PracticePage() {
             <PageRangeLegend
               pageStart={pageStart}
               pageEnd={pageEnd}
-              difficulty={difficulty}
+              difficulty={selectedDifficulty ?? difficulty}
             />
           )}
           {hasHydrated ? (

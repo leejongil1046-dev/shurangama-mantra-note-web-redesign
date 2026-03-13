@@ -51,8 +51,8 @@ export default function TopSettingButton({
       >
         <Image src="/icons/zoom_out.svg" alt="글자_크기_축소" width={30} height={30} />
       </button> */}
-      <ActionButton label="글자 크기 확대" onClick={increaseFontSize} />
-      <ActionButton label="글자 크기 축소" onClick={decreaseFontSize} />
+      <ActionButton label="+" onClick={increaseFontSize} />
+      <ActionButton label="-" onClick={decreaseFontSize} />
       {/* <button
         type="button"
         onClick={handleClickReset}

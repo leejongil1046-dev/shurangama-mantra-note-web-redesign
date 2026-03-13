@@ -30,6 +30,15 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.home-hero-background {
+  background-image: url("/원상.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: rgba(255, 255, 255, 0.8); /* 흰색 반투명 오버레이 */
+  background-blend-mode: lighten;
+}
+
 .font-mantra {
   font-family: var(--font-noto-serif-kr), "Noto Serif KR", serif;
 }
