@@ -18,6 +18,10 @@ export default function MainNav() {
   const pathname = usePathname();
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+  const practiceTriggerRef = useRef<HTMLAnchorElement | null>(null);
+  const testTriggerRef = useRef<HTMLAnchorElement | null>(null);
+  const practicePanelRef = useRef<HTMLDivElement | null>(null);
+  const testPanelRef = useRef<HTMLDivElement | null>(null);
   const [lineStyle, setLineStyle] = useState({ left: 0, width: 0 });
   const [practiceLineStyle, setPracticeLineStyle] = useState({
     left: 0,
@@ -84,6 +88,39 @@ export default function MainNav() {
     });
   }, [testIndex, pathname]);
 
+  useEffect(() => {
+    if (!isPracticeOpen && !isTestOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+
+      const clickedInPractice =
+        (practiceTriggerRef.current &&
+          practiceTriggerRef.current.contains(target)) ||
+        (practicePanelRef.current &&
+          practicePanelRef.current.contains(target));
+
+      const clickedInTest =
+        (testTriggerRef.current &&
+          testTriggerRef.current.contains(target)) ||
+        (testPanelRef.current && testPanelRef.current.contains(target));
+
+      if (!clickedInPractice) {
+        setIsPracticeOpen(false);
+      }
+
+      if (!clickedInTest) {
+        setIsTestOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isPracticeOpen, isTestOpen]);
+
   const handleClickPracticeNav = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     setIsPracticeOpen((prev) => !prev);
@@ -130,6 +167,12 @@ export default function MainNav() {
               key={item.key}
               ref={(el) => {
                 itemRefs.current[index] = el;
+                if (isPractice) {
+                  practiceTriggerRef.current = el;
+                }
+                if (isTest) {
+                  testTriggerRef.current = el;
+                }
               }}
               href={item.href}
               onClick={
@@ -160,6 +203,7 @@ export default function MainNav() {
 
         {/* 연습하기 난이도 선택 패널 */}
         <div
+          ref={practicePanelRef}
           className="pointer-events-none absolute bottom-0 z-10 translate-y-full"
           style={{
             left: practiceLineStyle.left,
@@ -189,6 +233,7 @@ export default function MainNav() {
 
         {/* 테스트하기 난이도 선택 패널 */}
         <div
+          ref={testPanelRef}
           className="pointer-events-none absolute bottom-0 z-10 translate-y-full"
           style={{
             left: testLineStyle.left,
