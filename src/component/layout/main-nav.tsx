@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 const NAV_ITEMS = [
   { href: "/", label: "시작하기", key: "home" },
   { href: "/practice", label: "연습하기", key: "practice" },
-  { href: "/test", label: "테스트하기", key: "test" },
+  { href: "/test", label: "능엄주 게임", key: "test" },
   { href: "/more/video", label: "더보기", key: "more" },
 ] as const;
 
