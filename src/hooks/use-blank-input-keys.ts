@@ -56,7 +56,7 @@ export function useBlankInputKeys(blankOrder: number[] | undefined) {
       const currentInput = e.currentTarget;
       const currentValue = currentInput.value;
 
-      if (e.key === "Enter") {
+      if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
         requestAnimationFrame(() => moveToNextBlank(currentInput, globalIndex));
         return;

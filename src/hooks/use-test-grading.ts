@@ -45,17 +45,22 @@ export function useTestGrading({
     return { totalBlanks: total, filledCount: filled };
   }, [blankByPage, answersByPage]);
 
+  const canGrade =
+    selectedDifficulty !== null && totalBlanks > 0 && filledCount > 0;
+
   const handleGradeClick = () => {
     if (selectedDifficulty === null) return;
     if (gradeResult) {
       setIsResultModalOpen(true);
     } else {
+      if (!canGrade) return;
       setIsGradeConfirmOpen(true);
     }
   };
 
   const handleGradeConfirm = () => {
     if (selectedDifficulty === null) return;
+    if (!canGrade) return;
     setIsGradeConfirmOpen(false);
     const result = computeGradeResult(
       blankByPage,
@@ -74,6 +79,7 @@ export function useTestGrading({
   return {
     totalBlanks,
     filledCount,
+    canGrade,
     gradeDisplay,
     isGradeConfirmOpen,
     setIsGradeConfirmOpen,

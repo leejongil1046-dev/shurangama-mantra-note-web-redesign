@@ -123,7 +123,7 @@ export default function TestPage() {
     setIsGradeConfirmOpen,
     isResultModalOpen,
     setIsResultModalOpen,
-    handleGradeClick,
+    // handleGradeClick,
     handleGradeConfirm,
   } = useTestGrading({
     blankByPage,
