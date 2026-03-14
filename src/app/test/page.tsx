@@ -28,6 +28,7 @@ export default function TestPage() {
   const [blankByPage, setBlankByPage] = useState<BlankByPageState>({});
   const [answersByPage, setAnswersByPage] = useState<AnswersByPageState>({});
   const [gradeResult, setGradeResult] = useState<GradeResult | null>(null);
+  const [showWrongInputs, setShowWrongInputs] = useState(false);
 
   const selectedPages = useMemo(
     () => SHURANGAMA_MANTRA_PAGES.slice(pageStart - 1, pageEnd),
@@ -69,11 +70,22 @@ export default function TestPage() {
     [currentBlankIndicesArray],
   );
 
+  const hasWrongWithInput = useMemo(() => {
+    if (!gradeResult) return false;
+    for (const pageBlanks of Object.values(gradeResult.correctByBlank)) {
+      for (const g of Object.values(pageBlanks)) {
+        if (!g.correct && g.wrongChar.trim() !== "") return true;
+      }
+    }
+    return false;
+  }, [gradeResult]);
+
   const handleResetTest = () => {
     setIsActive(false);
     setBlankByPage({});
     setAnswersByPage({});
     setGradeResult(null);
+    setShowWrongInputs(false);
     setSelectedDifficulty(null);
     setCurrentIndex(0);
   };
@@ -93,8 +105,6 @@ export default function TestPage() {
   };
 
   const handleSelectDifficulty = (targetDifficulty: Difficulty) => {
-    // 난이도 선택 시: 기존 테스트 세션을 초기화하고,
-    // 새 난이도로 빈칸을 생성한 뒤 바로 테스트를 시작한다.
     const nextBlankByPage = createBlankByPageForDifficulty(targetDifficulty);
 
     setIsActive(true);
@@ -113,7 +123,7 @@ export default function TestPage() {
     setIsGradeConfirmOpen,
     isResultModalOpen,
     setIsResultModalOpen,
-    // handleGradeClick,
+    handleGradeClick,
     handleGradeConfirm,
   } = useTestGrading({
     blankByPage,
@@ -122,7 +132,7 @@ export default function TestPage() {
     gradeResult,
     setGradeResult,
     currentPageIndex,
-    currentPage: currentPage ?? undefined,
+    selectedDifficulty,
   });
 
   if (!currentPage) return null;
@@ -131,7 +141,7 @@ export default function TestPage() {
     <div className="mx-auto h-full w-[1200px]">
       <section className="flex w-full h-full min-w-0 flex-col overflow-hidden pr-5 pl-5 pb-5">
         <div className="flex items-center justify-between p-4">
-          <div className="flex flex-row justify-start gap-5 w-[400px]">
+          <div className="flex flex-row justify-start gap-5 w-[450px]">
             <ActionButton
               label="초급"
               onClick={() => handleSelectDifficulty("easy")}
@@ -147,10 +157,18 @@ export default function TestPage() {
               onClick={() => handleSelectDifficulty("hard")}
               isSelected={selectedDifficulty === "hard"}
             />
-            <ActionButton
-              label={gradeResult ? "결과확인" : "채점하기"}
-              onClick={handleGradeConfirm}
-            />
+            {gradeResult ? (<>
+              <ActionButton label="결과확인" onClick={handleGradeConfirm} />
+              {hasWrongWithInput && (
+                <ActionButton
+                  label={showWrongInputs ? "정답보기" : "오답보기"}
+                  onClick={() => setShowWrongInputs((s) => !s)}
+                  isSelected={showWrongInputs}
+                />
+              )}
+            </>)
+              : <ActionButton label="채점하기" onClick={handleGradeConfirm} />
+            }
           </div>
 
           <PaginationControls
@@ -200,6 +218,7 @@ export default function TestPage() {
                   answers={currentAnswers}
                   onChangeAnswer={gradeResult ? undefined : handleChangeAnswer}
                   gradeDisplay={gradeDisplay}
+                  showWrongInputForAll={showWrongInputs}
                   fontSize={fontSize}
                   blankOrder={sortedBlankIndices}
                 />

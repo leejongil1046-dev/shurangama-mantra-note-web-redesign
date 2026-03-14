@@ -2,13 +2,18 @@ import { getFullText } from "@/lib/mantra-format";
 import type { Mantra } from "@/types/mantra";
 import type { BlankByPageState } from "@/store/test-store";
 
+/** 정답이면 글자 하나, 오답이면 정답/오답 두 개 */
+export type BlankGrade =
+  | { correct: true; char: string }
+  | { correct: false; correctChar: string; wrongChar: string };
+
 export type GradeResult = {
   perPage: Record<
     number,
     { totalChars: number; blanks: number; correct: number; wrong: number }
   >;
   total: { totalChars: number; blanks: number; correct: number; wrong: number };
-  correctByBlank: Record<number, Record<number, boolean>>;
+  correctByBlank: Record<number, Record<number, BlankGrade>>;
 };
 
 type AnswersByPage = Record<number, Record<number, string>>;
@@ -38,13 +43,15 @@ export function computeGradeResult(
       .filter((ch) => ch !== " " && ch !== "\n").length;
     let correct = 0;
     let wrong = 0;
-    const byBlank: Record<number, boolean> = {};
+    const byBlank: Record<number, BlankGrade> = {};
 
     for (const charIndex of indices) {
       const correctChar = fullText[charIndex] ?? "";
       const userAnswer = (answers[charIndex] ?? "").trim();
       const isCorrect = userAnswer === correctChar;
-      byBlank[charIndex] = isCorrect;
+      byBlank[charIndex] = isCorrect
+        ? { correct: true, char: correctChar }
+        : { correct: false, correctChar, wrongChar: userAnswer };
       if (isCorrect) correct++;
       else wrong++;
     }

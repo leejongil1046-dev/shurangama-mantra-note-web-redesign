@@ -3,12 +3,8 @@
 import type React from "react";
 import { useRef } from "react";
 import { getIndentPx, getLinesForRender } from "@/lib/mantra-format";
+import type { BlankGrade } from "@/lib/grade-test";
 import type { Mantra, RenderLineInfo } from "@/types/mantra";
-
-export type GradeDisplayEntry = {
-  correctChar: string;
-  isCorrect: boolean;
-};
 
 export type MantraTextViewProps = {
   mantra: Mantra;
@@ -16,7 +12,8 @@ export type MantraTextViewProps = {
   mode?: "practice" | "test";
   answers?: Record<number, string>;
   onChangeAnswer?: (index: number, value: string) => void;
-  gradeDisplay?: Record<number, GradeDisplayEntry>;
+  gradeDisplay?: Record<number, BlankGrade>;
+  showWrongInputForAll?: boolean;
   fontSize?: number;
   blankOrder?: number[];
 };
@@ -42,6 +39,7 @@ export default function MantraTextView({
   answers,
   onChangeAnswer,
   gradeDisplay,
+  showWrongInputForAll = false,
   fontSize = DEFAULT_FONT_SIZE,
   blankOrder,
 }: MantraTextViewProps) {
@@ -141,6 +139,16 @@ export default function MantraTextView({
       if (blankIndices.has(globalIndex)) {
         if (gradeDisplay?.[globalIndex]) {
           const graded = gradeDisplay[globalIndex];
+          const isWrong = !graded.correct;
+          const showMyWrong =
+            isWrong &&
+            showWrongInputForAll &&
+            graded.wrongChar.trim() !== "";
+          const displayChar = graded.correct
+            ? graded.char
+            : showMyWrong
+              ? graded.wrongChar
+              : graded.correctChar;
 
           return (
             <div
@@ -154,7 +162,11 @@ export default function MantraTextView({
                 boxSizing: "border-box",
                 backgroundColor: "#f8f8f8",
                 fontSize,
-                color: graded.isCorrect ? "#2563eb" : "#dc2626",
+                color: graded.correct
+                  ? "#2563eb"
+                  : showMyWrong
+                    ? "#171717"
+                    : "#dc2626",
               }}
             >
               <span
@@ -164,7 +176,7 @@ export default function MantraTextView({
                   top: "-1px",
                 }}
               >
-                {graded.correctChar}
+                {displayChar}
               </span>
             </div>
           );
@@ -195,6 +207,7 @@ export default function MantraTextView({
                 borderRadius: 5,
                 boxSizing: "border-box",
                 backgroundColor: "#f8f8f8",
+                color: "#171717",
                 fontSize,
               }}
             />

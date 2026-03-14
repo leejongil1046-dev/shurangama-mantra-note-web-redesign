@@ -34,7 +34,7 @@ export default function TopSettingButton({
   };
 
   return (
-    <div className="flex w-[400px] items-center justify-end gap-3">
+    <div className="flex w-[450px] items-center justify-end gap-3">
       {/* <button
         type="button"
         onClick={increaseFontSize}

@@ -3,9 +3,9 @@
 import { useMemo, useState } from "react";
 import { computeGradeResult } from "@/lib/grade-test";
 import type { GradeResult } from "@/lib/grade-test";
-import { getFullText } from "@/lib/mantra-format";
 import type { BlankByPageState } from "@/store/test-store";
 import type { MantraPageItem } from "@/types/mantra";
+import type { Difficulty } from "@/store/setting-store";
 
 type AnswersByPage = Record<number, Record<number, string>>;
 
@@ -16,7 +16,8 @@ type UseTestGradingParams = {
   gradeResult: GradeResult | null;
   setGradeResult: (result: GradeResult | null) => void;
   currentPageIndex: number;
-  currentPage: MantraPageItem | undefined;
+  /** null이면 채점/결과 모달 동작 안 함 (난이도 미선택 상태) */
+  selectedDifficulty: Difficulty | null;
 };
 
 export function useTestGrading({
@@ -26,7 +27,7 @@ export function useTestGrading({
   gradeResult,
   setGradeResult,
   currentPageIndex,
-  currentPage,
+  selectedDifficulty,
 }: UseTestGradingParams) {
   const [isGradeConfirmOpen, setIsGradeConfirmOpen] = useState(false);
   const [isResultModalOpen, setIsResultModalOpen] = useState(false);
@@ -45,6 +46,7 @@ export function useTestGrading({
   }, [blankByPage, answersByPage]);
 
   const handleGradeClick = () => {
+    if (selectedDifficulty === null) return;
     if (gradeResult) {
       setIsResultModalOpen(true);
     } else {
@@ -53,6 +55,7 @@ export function useTestGrading({
   };
 
   const handleGradeConfirm = () => {
+    if (selectedDifficulty === null) return;
     setIsGradeConfirmOpen(false);
     const result = computeGradeResult(
       blankByPage,
@@ -64,19 +67,9 @@ export function useTestGrading({
   };
 
   const gradeDisplay = useMemo(() => {
-    if (!gradeResult || !currentPage) return undefined;
-    const fullText = getFullText(currentPage.mantra);
-    const byBlank = gradeResult.correctByBlank[currentPageIndex];
-    if (!byBlank) return undefined;
-    const out: Record<number, { correctChar: string; isCorrect: boolean }> = {};
-    for (const charIndex of Object.keys(byBlank).map(Number)) {
-      out[charIndex] = {
-        correctChar: fullText[charIndex] ?? "",
-        isCorrect: byBlank[charIndex],
-      };
-    }
-    return out;
-  }, [gradeResult, currentPage, currentPageIndex]);
+    if (!gradeResult) return undefined;
+    return gradeResult.correctByBlank[currentPageIndex];
+  }, [gradeResult, currentPageIndex]);
 
   return {
     totalBlanks,
