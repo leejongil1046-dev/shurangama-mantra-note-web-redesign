@@ -161,7 +161,7 @@ export default function TestPage() {
               <ActionButton label="결과확인" onClick={handleGradeConfirm} />
               {hasWrongWithInput && (
                 <ActionButton
-                  label={showWrongInputs ? "정답보기" : "오답보기"}
+                  label={showWrongInputs ? "정답확인" : "오답확인"}
                   onClick={() => setShowWrongInputs((s) => !s)}
                   isSelected={showWrongInputs}
                 />
