@@ -1,10 +1,9 @@
 "use client";
 
-import type React from "react";
-import { useRef } from "react";
 import { getIndentPx, getLinesForRender } from "@/lib/mantra-format";
 import type { BlankGrade } from "@/lib/grade-test";
 import type { Mantra, RenderLineInfo } from "@/types/mantra";
+import { useBlankInputKeys } from "@/hooks/use-blank-input-keys";
 
 export type MantraTextViewProps = {
   mantra: Mantra;
@@ -47,85 +46,11 @@ export default function MantraTextView({
     getMantraLayoutByFontSize(fontSize);
 
   const lines = getLinesForRender(mantra);
-  const isComposingRef = useRef(false);
-
-  const focusInputAtEnd = (input: HTMLInputElement) => {
-    input.focus();
-  
-    const length = input.value.length;
-    input.setSelectionRange(length, length);
-  };
-  
-  const moveToNextBlank = (
-    currentElement: HTMLInputElement,
-    globalIndex: number,
-  ) => {
-    if (!blankOrder) return;
-  
-    const currentPos = blankOrder.indexOf(globalIndex);
-    if (currentPos === -1 || currentPos >= blankOrder.length - 1) return;
-  
-    const nextGlobalIndex = blankOrder[currentPos + 1];
-    const container = currentElement.closest("[data-mantra-container]");
-    if (!container) return;
-  
-    const selector = `input[data-blank-global-index="${nextGlobalIndex}"]`;
-    const nextInput = container.querySelector<HTMLInputElement>(selector);
-  
-    if (!nextInput) return;
-  
-    focusInputAtEnd(nextInput);
-  };
-  
-  const moveToPrevBlank = (
-    currentElement: HTMLInputElement,
-    globalIndex: number,
-  ) => {
-    if (!blankOrder) return;
-  
-    const currentPos = blankOrder.indexOf(globalIndex);
-    if (currentPos <= 0) return;
-  
-    const prevGlobalIndex = blankOrder[currentPos - 1];
-    const container = currentElement.closest("[data-mantra-container]");
-    if (!container) return;
-  
-    const selector = `input[data-blank-global-index="${prevGlobalIndex}"]`;
-    const prevInput = container.querySelector<HTMLInputElement>(selector);
-  
-    if (!prevInput) return;
-  
-    focusInputAtEnd(prevInput);
-  };
-
-  const handleBlankInputKeyDown = (
-    e: React.KeyboardEvent<HTMLInputElement>,
-    globalIndex: number,
-  ) => {
-    if (!blankOrder || !onChangeAnswer) return;
-
-    if (isComposingRef.current || e.nativeEvent.isComposing) return;
-
-    const currentInput = e.currentTarget;
-    const currentValue = currentInput.value;
-
-    if (e.key === "Enter") {
-      e.preventDefault();
-
-      requestAnimationFrame(() => {
-        moveToNextBlank(currentInput, globalIndex);
-      });
-      return;
-    }
-
-    if (e.key === "Backspace" && currentValue === "") {
-      e.preventDefault();
-
-      requestAnimationFrame(() => {
-        moveToPrevBlank(currentInput, globalIndex);
-      });
-    }
-  };
+  const {
+    handleBlankInputKeyDown,
+    onCompositionStart,
+    onCompositionEnd,
+  } = useBlankInputKeys(blankOrder);
 
   const renderLine = (lineInfo: RenderLineInfo, lineIndex: number) => {
     const { line, indent, startIndex } = lineInfo;
@@ -193,12 +118,8 @@ export default function MantraTextView({
               maxLength={1}
               onChange={(e) => onChangeAnswer(globalIndex, e.target.value)}
               onKeyDown={(e) => handleBlankInputKeyDown(e, globalIndex)}
-              onCompositionStart={() => {
-                isComposingRef.current = true;
-              }}
-              onCompositionEnd={() => {
-                isComposingRef.current = false;
-              }}
+              onCompositionStart={onCompositionStart}
+              onCompositionEnd={onCompositionEnd}
               className="pb-0.5 text-center font-mantra font-semibold focus:outline-gray-500"
               style={{
                 width: charBoxWidth,
