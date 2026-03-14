@@ -13,8 +13,16 @@ function focusInputAtEnd(input: HTMLInputElement) {
   input.setSelectionRange(length, length);
 }
 
-export function useBlankInputKeys(blankOrder: number[] | undefined) {
+export function useBlankInputKeys(
+  blankOrder: number[] | undefined,
+  options?: {
+    onEnterAtLastBlank?: () => void;
+    onBackspaceAtFirstBlank?: () => void;
+  },
+) {
   const isComposingRef = useRef(false);
+  const onEnterAtLastBlank = options?.onEnterAtLastBlank;
+  const onBackspaceAtFirstBlank = options?.onBackspaceAtFirstBlank;
 
   const moveToNextBlank = useCallback(
     (currentElement: HTMLInputElement, globalIndex: number) => {
@@ -58,16 +66,34 @@ export function useBlankInputKeys(blankOrder: number[] | undefined) {
 
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
+        const currentPos = blankOrder.indexOf(globalIndex);
+        const isLastBlank = currentPos === blankOrder.length - 1;
+        if (isLastBlank && onEnterAtLastBlank) {
+          onEnterAtLastBlank();
+          return;
+        }
         requestAnimationFrame(() => moveToNextBlank(currentInput, globalIndex));
         return;
       }
 
       if (e.key === "Backspace" && currentValue === "") {
         e.preventDefault();
+        const currentPos = blankOrder.indexOf(globalIndex);
+        const isFirstBlank = currentPos === 0;
+        if (isFirstBlank && onBackspaceAtFirstBlank) {
+          onBackspaceAtFirstBlank();
+          return;
+        }
         requestAnimationFrame(() => moveToPrevBlank(currentInput, globalIndex));
       }
     },
-    [blankOrder, moveToNextBlank, moveToPrevBlank],
+    [
+      blankOrder,
+      moveToNextBlank,
+      moveToPrevBlank,
+      onEnterAtLastBlank,
+      onBackspaceAtFirstBlank,
+    ],
   );
 
   const onCompositionStart = useCallback(() => {

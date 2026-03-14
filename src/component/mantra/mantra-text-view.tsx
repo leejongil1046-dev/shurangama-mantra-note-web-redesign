@@ -1,5 +1,6 @@
 "use client";
 
+import type React from "react";
 import { getIndentPx, getLinesForRender } from "@/lib/mantra-format";
 import type { BlankGrade } from "@/lib/grade-test";
 import type { Mantra, RenderLineInfo } from "@/types/mantra";
@@ -15,6 +16,10 @@ export type MantraTextViewProps = {
   showWrongInputForAll?: boolean;
   fontSize?: number;
   blankOrder?: number[];
+  containerRef?: React.RefObject<HTMLDivElement | null>;
+  onEnterAtLastBlank?: () => void;
+  /** 테스트 페이지: 첫 빈칸에서 백스페이스(빈칸일 때) 시 이전 페이지 마지막 빈칸으로 */
+  onBackspaceAtFirstBlank?: () => void;
 };
 
 const DEFAULT_FONT_SIZE = 20;
@@ -41,6 +46,9 @@ export default function MantraTextView({
   showWrongInputForAll = false,
   fontSize = DEFAULT_FONT_SIZE,
   blankOrder,
+  containerRef,
+  onEnterAtLastBlank,
+  onBackspaceAtFirstBlank,
 }: MantraTextViewProps) {
   const { charBoxWidth, charBoxHeight, marginBottom } =
     getMantraLayoutByFontSize(fontSize);
@@ -50,7 +58,10 @@ export default function MantraTextView({
     handleBlankInputKeyDown,
     onCompositionStart,
     onCompositionEnd,
-  } = useBlankInputKeys(blankOrder);
+  } = useBlankInputKeys(blankOrder, {
+    onEnterAtLastBlank,
+    onBackspaceAtFirstBlank,
+  });
 
   const renderLine = (lineInfo: RenderLineInfo, lineIndex: number) => {
     const { line, indent, startIndex } = lineInfo;
@@ -189,7 +200,11 @@ export default function MantraTextView({
   };
 
   return (
-    <div className="font-mantra leading-relaxed" data-mantra-container>
+    <div
+      ref={containerRef}
+      className="font-mantra leading-relaxed"
+      data-mantra-container
+    >
       {lines.map((lineInfo, lineIndex) => renderLine(lineInfo, lineIndex))}
     </div>
   );
